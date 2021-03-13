@@ -61,7 +61,7 @@ public class AuthControllerImpl {
             Usuario usuario = this.usuarioRepository.findByEmail(username);
             System.out.println(usuario.toString());
             Map<Object, Object> model = new HashMap<>();
-            model.put("username", usuario.getNome());
+            model.put("username", usuario.getDadosPessoais().getNome());
             model.put("token", "Bearer " + token);
             return ok(model);
 
