@@ -125,20 +125,6 @@ public class DiagnosticoServiceImpl implements DiagnosticoService {
 
     @Override
     public Boolean validarPrazos(Diagnostico diagnostico){
-        return (
-            diagnostico.getFimComportamental().isAfter(diagnostico.getInicioComportamental()) ||
-            diagnostico.getFimComportamental().isEqual(diagnostico.getInicioComportamental())
-        ) &&
-        (
-            diagnostico.getFimResponsabilidadeChefia().isAfter(diagnostico.getInicioResponsabilidadeChefia()) ||
-            diagnostico.getFimResponsabilidadeChefia().isEqual(diagnostico.getInicioResponsabilidadeChefia())
-        ) &&
-        (
-            diagnostico.getFimResponsabilidadeServidor().isAfter(diagnostico.getInicioResponsabilidadeServidor()) ||
-            diagnostico.getFimResponsabilidadeServidor().isEqual(diagnostico.getInicioResponsabilidadeServidor())
-        ) &&
-        (
-            diagnostico.getInicioResponsabilidadeServidor().isAfter(diagnostico.getFimResponsabilidadeChefia())
-        );
+        return diagnostico.validarPrazos();
     }
 }

@@ -159,4 +159,21 @@ public class Diagnostico {
         return datas;
 	}
 	
+	 public Boolean validarPrazos(){
+	        return (
+	            this.getFimComportamental().isAfter(this.getInicioComportamental()) ||
+	            this.getFimComportamental().isEqual(this.getInicioComportamental())
+	        ) &&
+	        (
+	        	this.getFimResponsabilidadeChefia().isAfter(this.getInicioResponsabilidadeChefia()) ||
+	            this.getFimResponsabilidadeChefia().isEqual(this.getInicioResponsabilidadeChefia())
+	        ) &&
+	        (
+	        	this.getFimResponsabilidadeServidor().isAfter(this.getInicioResponsabilidadeServidor()) ||
+	            this.getFimResponsabilidadeServidor().isEqual(this.getInicioResponsabilidadeServidor())
+	        ) &&
+	        (
+	        	this.getInicioResponsabilidadeServidor().isAfter(this.getFimResponsabilidadeChefia())
+	        );
+	    }
 }
