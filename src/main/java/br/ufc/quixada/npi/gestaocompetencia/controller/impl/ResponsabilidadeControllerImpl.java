@@ -288,18 +288,8 @@ public class ResponsabilidadeControllerImpl {
 	
 	@PutMapping("/normalizacao/desconsolidar/{responsabilidade}")
 	public ResponseEntity<Responsabilidade> desconsolidarResponsabilidade(@PathVariable Responsabilidade responsabilidade) {
-		responsabilidade.setUsuarioComissao(null);
-		responsabilidade.setTituloComissao(null);
-		responsabilidade.setDificuldadeComissao(null);
-		responsabilidade.setImpactoComissao(null);
-		responsabilidade.setCompetenciasComissao(new ArrayList<>());
-
-		responsabilidade.setUsuarioConsolidacao(null);
-		responsabilidade.setTituloConsolidado(null);
-		responsabilidade.setDificuldadeConsolidado(null);
-		responsabilidade.setImpactoConsolidado(null);
-		responsabilidade.setCompetenciasConsolidado(new ArrayList<>());
-		responsabilidade.setConsolidada(false);
+		
+		responsabilidade.desconsolidar();
 
 		if(!responsabilidade.isValidada()) {
 			responsabilidade.setEditada(false);
@@ -343,13 +333,7 @@ public class ResponsabilidadeControllerImpl {
 	private void validacaoResponsabilidadeUpdate(Responsabilidade responsabilidade,
 			Responsabilidade responsabilidadeAtualizada, Usuario usuario) {
 
-		responsabilidade.setUsuarioChefia(usuario);
-		responsabilidade.setTituloChefia(responsabilidadeAtualizada.getTitulo());
-        responsabilidade.setTituloConsolidado(null);
-		responsabilidade.setDificuldadeChefia(responsabilidadeAtualizada.getDificuldade());
-		responsabilidade.setImpactoChefia(responsabilidadeAtualizada.getImpacto());
-		responsabilidade.setCompetenciasChefia(responsabilidadeAtualizada.getCompetencias());
-		
+		responsabilidade.validacaoUpdate(responsabilidadeAtualizada, usuario);
 	}
 
 }

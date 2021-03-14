@@ -426,6 +426,20 @@ public class Responsabilidade {
 		this.atualizarConsolidacao(usuario,responsabilidadeBase);
 	}
 	
+	public void desconsolidar() {
+		this.setUsuarioComissao(null);
+		this.setTituloComissao(null);
+		this.setDificuldadeComissao(null);
+		this.setImpactoComissao(null);
+		this.setCompetenciasComissao(new ArrayList<>());
+		this.setUsuarioConsolidacao(null);
+		this.setTituloConsolidado(null);
+		this.setDificuldadeConsolidado(null);
+		this.setImpactoConsolidado(null);
+		this.setCompetenciasConsolidado(new ArrayList<>());
+		this.setConsolidada(false);
+	}
+	
 	public void desvalidar() {
 		this.setUsuarioChefia(null);
 		this.setTituloChefia(null);
@@ -434,5 +448,14 @@ public class Responsabilidade {
 		this.setCompetenciasChefia(new ArrayList<>());
 		this.setValidada(false);
 		this.setEditada(false);
+	}
+	
+	public void validacaoUpdate(Responsabilidade responsabilidadeAtualizada, Usuario usuario) {
+		this.setUsuarioChefia(usuario);
+		this.setTituloChefia(responsabilidadeAtualizada.getTitulo());
+		this.setTituloConsolidado(null);
+		this.setDificuldadeChefia(responsabilidadeAtualizada.getDificuldade());
+		this.setImpactoChefia(responsabilidadeAtualizada.getImpacto());
+		this.setCompetenciasChefia(responsabilidadeAtualizada.getCompetencias());
 	}
 }
