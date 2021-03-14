@@ -81,8 +81,7 @@ public class ItemAvaliacaoControllerImpl implements ItemAvaliacaoController {
     @Override
     @PutMapping("/{item}")
     public ResponseEntity<ItemAvaliacao> update(@PathVariable("item") ItemAvaliacao itemAvaliacao, @RequestBody ItemAvaliacao itemAvaliacaoAtualizado) {
-        itemAvaliacao.setNota(itemAvaliacaoAtualizado.getNota());
-        itemAvaliacao.setNaoAplica(itemAvaliacaoAtualizado.isNaoAplica());
+        itemAvaliacao.update(itemAvaliacaoAtualizado.getNota(), itemAvaliacaoAtualizado.isNaoAplica());
         return ResponseEntity.ok(itemAvaliacaoService.update(itemAvaliacao));
     }
 

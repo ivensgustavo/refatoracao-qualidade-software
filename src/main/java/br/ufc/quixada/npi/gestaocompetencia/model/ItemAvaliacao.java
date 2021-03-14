@@ -75,4 +75,9 @@ public class ItemAvaliacao {
     public boolean isAvaliador(Usuario usuario) {
     	return avaliacao.isAvaliador(usuario);
     }
+    
+    public void update(EscalaAvaliacao nota, boolean naoAplica) {
+    	this.setNota(nota);
+        this.setNaoAplica(naoAplica);
+    }
 }
