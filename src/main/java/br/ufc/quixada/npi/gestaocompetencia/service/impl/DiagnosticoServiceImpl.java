@@ -112,14 +112,7 @@ public class DiagnosticoServiceImpl implements DiagnosticoService {
 
     @Override
     public Boolean validarDatas(Diagnostico diagnostico){
-        ArrayList<LocalDate> datas = new ArrayList<>();
-
-        datas.add(diagnostico.getInicioComportamental());
-        datas.add(diagnostico.getFimComportamental());
-        datas.add(diagnostico.getInicioResponsabilidadeChefia());
-        datas.add(diagnostico.getFimResponsabilidadeChefia());
-        datas.add(diagnostico.getInicioResponsabilidadeServidor());
-        datas.add(diagnostico.getFimResponsabilidadeServidor());
+        ArrayList<LocalDate> datas = diagnostico.getDatasDiagnostico();
 
         for(LocalDate data: datas){
             if(data.isBefore(LocalDate.now())){

@@ -1,6 +1,7 @@
 package br.ufc.quixada.npi.gestaocompetencia.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -143,6 +144,19 @@ public class Diagnostico {
 
 	public void setCriadoEm(LocalDate criadoEm) {
 		this.criadoEm = criadoEm;
+	}
+	
+	public ArrayList<LocalDate> getDatasDiagnostico(){
+		ArrayList<LocalDate> datas = new ArrayList<>();
+
+        datas.add(this.getInicioComportamental());
+        datas.add(this.getFimComportamental());
+        datas.add(this.getInicioResponsabilidadeChefia());
+        datas.add(this.getFimResponsabilidadeChefia());
+        datas.add(this.getInicioResponsabilidadeServidor());
+        datas.add(this.getFimResponsabilidadeServidor());
+        
+        return datas;
 	}
 	
 }
