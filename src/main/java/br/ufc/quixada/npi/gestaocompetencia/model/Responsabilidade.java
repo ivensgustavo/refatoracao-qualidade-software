@@ -458,4 +458,12 @@ public class Responsabilidade {
 		this.setImpactoChefia(responsabilidadeAtualizada.getImpacto());
 		this.setCompetenciasChefia(responsabilidadeAtualizada.getCompetencias());
 	}
+	
+	public void cadastroUpdate(Responsabilidade responsabilidadeAtualizada, Usuario usuario) {
+		this.setUsuarioGestor(usuario);
+		this.setTitulo(responsabilidadeAtualizada.getTitulo());
+		this.setDificuldade(responsabilidadeAtualizada.getDificuldade());
+		this.setImpacto(responsabilidadeAtualizada.getImpacto());
+		this.setCompetencias(responsabilidadeAtualizada.getCompetencias());
+	}
 }

@@ -307,11 +307,8 @@ public class ResponsabilidadeControllerImpl {
 
 	private void cadastroResponsabilidadeUpdate(Responsabilidade responsabilidade,
 													Responsabilidade responsabilidadeAtualizada, Usuario usuario) {
-		responsabilidade.setUsuarioGestor(usuario);
-		responsabilidade.setTitulo(responsabilidadeAtualizada.getTitulo());
-		responsabilidade.setDificuldade(responsabilidadeAtualizada.getDificuldade());
-		responsabilidade.setImpacto(responsabilidadeAtualizada.getImpacto());
-		responsabilidade.setCompetencias(responsabilidadeAtualizada.getCompetencias());
+		
+		responsabilidade.cadastroUpdate(responsabilidadeAtualizada, usuario);
 	}
 
 	private void normalizacaoResponsabilidadeUpdate(Responsabilidade responsabilidade,
