@@ -342,11 +342,7 @@ public class ResponsabilidadeControllerImpl {
 	
 	private void consolidacaoResponsabilidadeUpdate(Responsabilidade responsabilidade,
 			Responsabilidade responsabilidadeAtualizada, Usuario usuario) {
-		responsabilidade.setUsuarioConsolidacao(usuario);
-		responsabilidade.setTituloConsolidado(responsabilidadeAtualizada.getTitulo());
-		responsabilidade.setDificuldadeConsolidado(responsabilidadeAtualizada.getDificuldade());
-		responsabilidade.setImpactoConsolidado(responsabilidadeAtualizada.getImpacto());
-		responsabilidade.setCompetenciasConsolidado(responsabilidadeAtualizada.getCompetencias());
+		responsabilidade.atualizarConsolidacao(usuario, responsabilidadeAtualizada);
 		for(Competencia comp : responsabilidade.getCompetenciasChefia()) if(!comp.isValidada()) comp.setValidada(true);
 		for(Competencia comp : responsabilidade.getCompetenciasConsolidado()) if(!comp.isValidada())comp.setValidada(true);
 	}
