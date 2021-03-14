@@ -337,13 +337,7 @@ public class ResponsabilidadeControllerImpl {
 			if(!comp.isValidada())
 				comp.setValidada(true);
 		}
-		responsabilidade.setUsuarioComissao(usuario);
-		responsabilidade.setTituloComissao(responsabilidadeAtualizada.getTitulo());
-		responsabilidade.setTituloChefia(null);
-		responsabilidade.setTituloConsolidado(null);
-		responsabilidade.setDificuldadeComissao(responsabilidadeAtualizada.getDificuldade());
-		responsabilidade.setImpactoComissao(responsabilidadeAtualizada.getImpacto());
-		responsabilidade.setCompetenciasComissao(responsabilidadeAtualizada.getCompetencias());
+		responsabilidade.atualizarNormalizacao(usuario, responsabilidadeAtualizada);
 	}
 	
 	private void consolidacaoResponsabilidadeUpdate(Responsabilidade responsabilidade,

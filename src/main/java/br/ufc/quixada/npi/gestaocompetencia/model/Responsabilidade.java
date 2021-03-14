@@ -395,19 +395,29 @@ public class Responsabilidade {
 		return competencias;
 	}
 
-	public void atualizarConsolidacao(Usuario usuario, Responsabilidade responsabilidade) {
+	public void atualizarConsolidacao(Usuario usuario, Responsabilidade responsabilidadeAtualizada) {
 		setUsuarioConsolidacao(usuario);
-		setTituloConsolidado(responsabilidade.getTituloAtual());
-		setDificuldadeConsolidado(responsabilidade.getDificuldadeAtual());
-		setImpactoConsolidado(responsabilidade.getImpactoAtual());
-		setCompetenciasConsolidado(responsabilidade.getCompetenciasAtuais());
+		setTituloConsolidado(responsabilidadeAtualizada.getTituloAtual());
+		setDificuldadeConsolidado(responsabilidadeAtualizada.getDificuldadeAtual());
+		setImpactoConsolidado(responsabilidadeAtualizada.getImpactoAtual());
+		setCompetenciasConsolidado(responsabilidadeAtualizada.getCompetenciasAtuais());
 	}
 
-	public void atualizarValidacao(Usuario usuario, Responsabilidade responsabilidade) {
+	public void atualizarValidacao(Usuario usuario, Responsabilidade responsabilidadeAtualizada) {
 		setUsuarioChefia(usuario);
-		setTituloChefia(responsabilidade.getTituloAtual());
-		setImpactoChefia(responsabilidade.getImpactoAtual());
-		setDificuldadeChefia(responsabilidade.getDificuldadeAtual());
-		setCompetenciasChefia(responsabilidade.getCompetenciasAtuais());
+		setTituloChefia(responsabilidadeAtualizada.getTituloAtual());
+		setImpactoChefia(responsabilidadeAtualizada.getImpactoAtual());
+		setDificuldadeChefia(responsabilidadeAtualizada.getDificuldadeAtual());
+		setCompetenciasChefia(responsabilidadeAtualizada.getCompetenciasAtuais());
+	}
+	
+	public void atualizarNormalizacao(Usuario usuario, Responsabilidade responsabilidadeAtualizada) {
+		this.setUsuarioComissao(usuario);
+		this.setTituloComissao(responsabilidadeAtualizada.getTitulo());
+		this.setTituloChefia(null);
+		this.setTituloConsolidado(null);
+		this.setDificuldadeComissao(responsabilidadeAtualizada.getDificuldade());
+		this.setImpactoComissao(responsabilidadeAtualizada.getImpacto());
+		this.setCompetenciasComissao(responsabilidadeAtualizada.getCompetencias());
 	}
 }
