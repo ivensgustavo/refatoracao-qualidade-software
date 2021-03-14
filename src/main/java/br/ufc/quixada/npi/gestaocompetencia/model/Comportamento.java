@@ -7,7 +7,10 @@ import org.hibernate.annotations.ColumnDefault;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import br.ufc.quixada.npi.gestaocompetencia.exception.GestaoCompetenciaException;
+import br.ufc.quixada.npi.gestaocompetencia.exception.ResourceNotFoundException;
 import br.ufc.quixada.npi.gestaocompetencia.model.enums.CategoriaComportamento;
+import br.ufc.quixada.npi.gestaocompetencia.service.CompetenciaService;
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity
@@ -160,5 +163,46 @@ public class Comportamento {
 				+ responsavelComissao + "]";
 	}
 	
+	public void updateAtravesDoCadastroDeComportamento(Comportamento comportamento) {
+		if(!this.getMapeamento().isPeriodoCadastroComportamentos())
+			throw new GestaoCompetenciaException("Não é possível atualizar um comportamento fora do prazo estipulado para cadastros de comportamentos");
+		
+		this.setDescricao(comportamento.getDescricao());
+	}
 	
+	public void updateAtravesDaNormalizacaoComportamental(Comportamento comportamento, Usuario usuario, String codigo, CompetenciaService competenciaService) {
+		if(!this.getMapeamento().isPeriodoNormalizacaoComportamentos())
+			throw new GestaoCompetenciaException("Não é possível normalizar um comportamento fora do prazo "
+					+ "estipulado para normalização de comportamentos");
+		
+		this.setDescricaoAtualizada(comportamento.getDescricaoAtualizada());
+		
+		if(comportamento.getCompetencia().getId() == -1)
+			this.setCompetencia(null);
+		
+		this.setImportancia(comportamento.getImportancia());
+		this.setResponsavelComissao(usuario);
+		
+		if(comportamento.getCompetencia() != null && comportamento.getCompetencia().getId() != -1) {
+			Competencia competencia = competenciaService.findById(comportamento.getCompetencia().getId())
+					.orElseThrow(() -> new ResourceNotFoundException("Competencia", codigo, comportamento.getCompetencia().getId()));
+			this.setCompetencia(competencia);
+		}
+	}
+	
+	public Comportamento consolidar(Comportamento comportamentoOriginal) {
+
+		if(this.getDescricaoAtualizada() == null)
+			this.setDescricaoAtualizada(this.getDescricao());
+		
+		if(this.isExcluido())
+			throw new GestaoCompetenciaException("Comportamento já encontra excluído");
+		
+		comportamentoOriginal.setCompetencia(this.getCompetencia());
+		comportamentoOriginal.setDescricaoAtualizada(this.getDescricaoAtualizada());
+		comportamentoOriginal.setConsolidado(true);
+		
+		return comportamentoOriginal;
+		
+	}
 }

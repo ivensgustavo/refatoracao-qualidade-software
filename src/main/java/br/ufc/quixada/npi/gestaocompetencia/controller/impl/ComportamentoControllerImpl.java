@@ -165,33 +165,10 @@ public class ComportamentoControllerImpl implements ComportamentoController {
 			throw new NotAllowedException("Sem permissão para editar o comportamento desejado");
 	
 		if(etapa == Etapa.CADASTRO_COMPORTAMENTOS) {
-			//Atualização a partir do cadastro de comportamentos
-			
-			if(!comportamentoOriginal.getMapeamento().isPeriodoCadastroComportamentos())
-				throw new GestaoCompetenciaException("Não é possível atualizar um comportamento fora do prazo estipulado para cadastros de comportamentos");
-			
-			comportamentoOriginal.setDescricao(comportamento.getDescricao());
+			comportamentoOriginal.updateAtravesDoCadastroDeComportamento(comportamento);
 		} 
 		else {
-			//Atualização a partir da normalização comportamental
-			if(!comportamentoOriginal.getMapeamento().isPeriodoNormalizacaoComportamentos())
-				throw new GestaoCompetenciaException("Não é possível normalizar um comportamento fora do prazo "
-						+ "estipulado para normalização de comportamentos");
-			
-			comportamentoOriginal.setDescricaoAtualizada(comportamento.getDescricaoAtualizada());
-			
-			if(comportamento.getCompetencia().getId() == -1)
-				comportamentoOriginal.setCompetencia(null);
-			
-			comportamentoOriginal.setImportancia(comportamento.getImportancia());
-			comportamentoOriginal.setResponsavelComissao(usuario);
-			
-			if(comportamento.getCompetencia() != null && comportamento.getCompetencia().getId() != -1) {
-				Competencia competencia = competenciaService.findById(comportamento.getCompetencia().getId())
-						.orElseThrow(() -> new ResourceNotFoundException("Competencia", CODIGO, comportamento.getCompetencia().getId()));
-				comportamentoOriginal.setCompetencia(competencia);
-			}
-			
+			comportamentoOriginal.updateAtravesDaNormalizacaoComportamental(comportamento, usuario, CODIGO, competenciaService);
 		}
 		
 		Comportamento comportamentoAtualizado = comportamentoService.update(comportamentoOriginal)
@@ -257,18 +234,11 @@ public class ComportamentoControllerImpl implements ComportamentoController {
 		Comportamento comportamentoOriginal = null;
 		
 		for(Comportamento comportamento : comportamentos) {
-			if(comportamento.getDescricaoAtualizada() == null)
-				comportamento.setDescricaoAtualizada(comportamento.getDescricao());
-			
-			if(comportamento.isExcluido())
-				throw new GestaoCompetenciaException("Comportamento já encontra excluído");
 			
 			comportamentoOriginal = comportamentoService.findById(comportamento.getId())
 					.orElseThrow(() -> new ResourceNotFoundException(COMPORTAMENTO, CODIGO, comportamento.getId()));
 			
-			comportamentoOriginal.setCompetencia(comportamento.getCompetencia());
-			comportamentoOriginal.setDescricaoAtualizada(comportamento.getDescricaoAtualizada());
-			comportamentoOriginal.setConsolidado(true);
+			comportamentoOriginal = comportamento.consolidar(comportamentoOriginal);
 			
 			comportamentosAux.add(comportamentoService.update(comportamentoOriginal)
 									.orElseThrow(() -> new GestaoCompetenciaException(
