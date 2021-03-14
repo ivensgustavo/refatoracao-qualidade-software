@@ -37,8 +37,8 @@ public class PerfilControllerImpl {
     }
     
     private boolean verificarPerfilValido(Perfil perfil, Perfil perfilSalvo) {
-    	return perfil != null && perfil.getId() != null && perfilSalvo != null
-    	        && perfil.getId().equals(perfilSalvo.getId());
+    	if(perfil == null) return false;
+    	return perfil.verificarValidade(perfilSalvo);
     }
     
     private void adicionarNovaAreaCapacitacaoAoPerfil(AreaCapacitacao areaCapacitacao, Usuario usuario) {

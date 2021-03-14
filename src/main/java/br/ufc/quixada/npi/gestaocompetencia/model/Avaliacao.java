@@ -2,6 +2,8 @@ package br.ufc.quixada.npi.gestaocompetencia.model;
 
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,5 +147,12 @@ public class Avaliacao {
             this.itens = new ArrayList<>();
         }
         this.itens.addAll(itens);
+    }
+    
+    public void setDadosAvaliacaoBase(TipoAvaliacao tipo, Usuario avaliador, Diagnostico diagnostico, Avaliacao.Perspectiva perspectiva) {
+    	this.setAvaliador(avaliador);
+		this.setDiagnostico(diagnostico);
+		this.setPerspectiva(perspectiva);
+		this.setTipo(tipo);
     }
 }

@@ -284,4 +284,9 @@ public class Perfil {
 	public int hashCode() {
 		return Objects.hash(id);
 	}
+	
+	public boolean verificarValidade(Perfil perfilSalvo) {
+		return this.getId() != null && perfilSalvo != null
+    	        && this.getId().equals(perfilSalvo.getId());
+	}
 }

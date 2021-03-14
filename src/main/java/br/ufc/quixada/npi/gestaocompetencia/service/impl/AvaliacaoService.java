@@ -354,10 +354,7 @@ public class AvaliacaoService {
 
 	private Avaliacao createBase(TipoAvaliacao tipo, Usuario avaliador, Diagnostico diagnostico, Avaliacao.Perspectiva perspectiva) {
 		Avaliacao avaliacao = new Avaliacao();
-		avaliacao.setAvaliador(avaliador);
-		avaliacao.setDiagnostico(diagnostico);
-		avaliacao.setPerspectiva(perspectiva);
-		avaliacao.setTipo(tipo);
+		avaliacao.setDadosAvaliacaoBase(tipo, avaliador, diagnostico, perspectiva);
 		return avaliacao;
 	}
 
