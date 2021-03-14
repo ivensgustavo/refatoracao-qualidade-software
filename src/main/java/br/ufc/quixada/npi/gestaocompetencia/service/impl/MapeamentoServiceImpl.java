@@ -53,17 +53,17 @@ public class MapeamentoServiceImpl implements MapeamentoService {
 
     @Override
     public List<Unidade> findAllSubunidadesInNormalizacao(Unidade unidade, Etapa etapa) {
-        //List<Unidade> response = new ArrayList<>();
+        List<Unidade> response = new ArrayList<>();
 
         if (etapa == Etapa.NORMALIZACAO_COMPORTAMENTOS) {
-            return mapeamentoRepository.findAllSubunidadesInPerComportComissao(LocalDate.now(), unidade);
+            response = mapeamentoRepository.findAllSubunidadesInPerComportComissao(LocalDate.now(), unidade);
         } else if (etapa == Etapa.NORMALIZACAO_RESPONSABILIDADES) {
-        	return mapeamentoRepository.findAllSubunidadesInPerRespCom(LocalDate.now(), unidade);
+            response = mapeamentoRepository.findAllSubunidadesInPerRespCom(LocalDate.now(), unidade);
         } else if (etapa == Etapa.CONSOLIDACAO_RESPONSABILIDADES) {
-        	return mapeamentoRepository.findAllSubunidadesInPerRespConsol(LocalDate.now(), unidade);
+            response = mapeamentoRepository.findAllSubunidadesInPerRespConsol(LocalDate.now(), unidade);
         }
 
-        return null;
+        return response;
     }
 
     @Override

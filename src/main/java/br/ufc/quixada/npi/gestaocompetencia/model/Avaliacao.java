@@ -155,4 +155,8 @@ public class Avaliacao {
 		this.setPerspectiva(perspectiva);
 		this.setTipo(tipo);
     }
+    
+    public boolean isAvaliador(Usuario usuario) {
+    	return this.getAvaliador().getId().equals(usuario.getId());
+    }
 }

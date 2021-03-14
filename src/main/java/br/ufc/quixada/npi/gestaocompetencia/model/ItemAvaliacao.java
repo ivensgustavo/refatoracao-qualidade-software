@@ -73,6 +73,6 @@ public class ItemAvaliacao {
     }
 
     public boolean isAvaliador(Usuario usuario) {
-    	return avaliacao.getAvaliador().getId().equals(usuario.getId());
+    	return avaliacao.isAvaliador(usuario);
     }
 }
