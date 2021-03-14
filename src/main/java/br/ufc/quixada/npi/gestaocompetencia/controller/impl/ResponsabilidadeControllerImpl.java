@@ -281,13 +281,7 @@ public class ResponsabilidadeControllerImpl {
 		if(!usuario.getUnidade().hasPermissionCRUD(usuario))
 			throw new GestaoCompetenciaException("Você não tem permissão para modificar esta responsabilidade");
 
-		responsabilidade.setUsuarioChefia(null);
-		responsabilidade.setTituloChefia(null);
-		responsabilidade.setDificuldadeChefia(null);
-		responsabilidade.setImpactoChefia(null);
-		responsabilidade.setCompetenciasChefia(new ArrayList<>());
-		responsabilidade.setValidada(false);
-		responsabilidade.setEditada(false);
+		responsabilidade.desvalidar();
 
 		return ResponseEntity.ok(responsabilidadeService.update(responsabilidade));
 	}

@@ -425,4 +425,14 @@ public class Responsabilidade {
 		this.setConsolidada(true);
 		this.atualizarConsolidacao(usuario,responsabilidadeBase);
 	}
+	
+	public void desvalidar() {
+		this.setUsuarioChefia(null);
+		this.setTituloChefia(null);
+		this.setDificuldadeChefia(null);
+		this.setImpactoChefia(null);
+		this.setCompetenciasChefia(new ArrayList<>());
+		this.setValidada(false);
+		this.setEditada(false);
+	}
 }
