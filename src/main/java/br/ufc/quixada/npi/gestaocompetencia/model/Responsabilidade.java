@@ -420,4 +420,9 @@ public class Responsabilidade {
 		this.setImpactoComissao(responsabilidadeAtualizada.getImpacto());
 		this.setCompetenciasComissao(responsabilidadeAtualizada.getCompetencias());
 	}
+	
+	public void consolidar(Usuario usuario, Responsabilidade responsabilidadeBase) {
+		this.setConsolidada(true);
+		this.atualizarConsolidacao(usuario,responsabilidadeBase);
+	}
 }

@@ -269,8 +269,7 @@ public class ResponsabilidadeControllerImpl {
 			Optional<Responsabilidade> responsabilidadeOpt = responsabilidadeService.findById(responsabilidade.getId());
 			if(responsabilidadeOpt.isPresent()) {
 				responsabilidadeOriginal = responsabilidadeOpt.get();
-			responsabilidadeOriginal.setConsolidada(true);
-			responsabilidadeOriginal.atualizarConsolidacao(usuario,responsabilidade);
+			responsabilidadeOriginal.consolidar(usuario,responsabilidade);
 			responsabilidadesAux.add(responsabilidadeService.update(responsabilidadeOriginal));
 			}
 		}
