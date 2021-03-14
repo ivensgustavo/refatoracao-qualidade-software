@@ -114,10 +114,7 @@ public class ExperienciaProfissionalControllerImpl {
     }
 
     private boolean validExperienciaProfissional(ExperienciaProfissional experienciaProfissional) {
-        return experienciaProfissional.getTipo() != null &&
-            experienciaProfissional.getCargo() != null &&
-            experienciaProfissional.getInstituicao() != null &&
-            experienciaProfissional.getInicio() != null;
+        return experienciaProfissional.validar();
     }
 
     private boolean validDatasExperienciaProfissional(LocalDate inicio, LocalDate termino) {

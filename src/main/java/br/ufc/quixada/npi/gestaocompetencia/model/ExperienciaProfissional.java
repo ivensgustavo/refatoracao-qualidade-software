@@ -105,4 +105,11 @@ public class ExperienciaProfissional {
     public void setPerfil(Perfil perfil) {
         this.perfil = perfil;
     }
+    
+    public boolean validar() {
+    	return 	this.getTipo() != null &&
+    			this.getCargo() != null &&
+    			this.getInstituicao() != null &&
+    			this.getInicio() != null;
+    }
 }
