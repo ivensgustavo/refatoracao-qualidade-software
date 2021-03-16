@@ -80,4 +80,13 @@ public class ItemAvaliacao {
     	this.setNota(nota);
         this.setNaoAplica(naoAplica);
     }
+    
+    public void prepararPutAtualizacaoComportamental(ItemAvaliacao avaliacao) {
+    	this.setAvaliacao(avaliacao.getAvaliacao());
+		this.setId(avaliacao.getId());
+		
+		if(this.getFator() == null)
+			this.setFator(avaliacao.getFator());
+					
+    }
 }

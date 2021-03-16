@@ -102,4 +102,12 @@ public class NivelEscolaridade {
 	public void setPerfil(Perfil perfil) {
 		this.perfil = perfil;
 	}
+	
+	public boolean validar() {
+		return this.getEscolaridade() != null
+	            && this.getInstituicao() != null
+	            && this.getStatus() != null
+	            && this.getInicio() != null
+	            && this.getTermino() != null;
+	}
 }

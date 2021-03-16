@@ -105,11 +105,7 @@ public class CursoCapacitacaoControllerImpl {
     }
 
     private boolean validCursoCapacitacao(CursoCapacitacao cursoCapacitacao) {
-        return cursoCapacitacao.getCargaHoraria() != null
-            && cursoCapacitacao.getInstituicao()  != null
-            && cursoCapacitacao.getNome() != null
-            && cursoCapacitacao.getInicio() != null
-            && cursoCapacitacao.getTermino() != null;
+        return cursoCapacitacao.validar();
     }
 
     private boolean validDatasCursoCapacitacao(LocalDate inicio, LocalDate termino) {

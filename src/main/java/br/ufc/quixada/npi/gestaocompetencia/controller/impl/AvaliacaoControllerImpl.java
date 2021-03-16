@@ -198,11 +198,7 @@ public class AvaliacaoControllerImpl{
 	
 	@PutMapping("/comportamental/{avaliacao}")
 	public ResponseEntity<ItemAvaliacao> putAtualizacaoComportamental(@PathVariable ItemAvaliacao avaliacao, @RequestBody ItemAvaliacao atualizada){
-			atualizada.setAvaliacao(avaliacao.getAvaliacao());
-			atualizada.setId(avaliacao.getId());
-			
-			if(atualizada.getFator() == null)
-				atualizada.setFator(avaliacao.getFator());
+			atualizada.prepararPutAtualizacaoComportamental(avaliacao);
 						
 		return ResponseEntity.ok(comportamentalService.put(atualizada));
 	}

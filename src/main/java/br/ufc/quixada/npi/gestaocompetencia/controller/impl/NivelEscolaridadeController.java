@@ -105,11 +105,7 @@ public class NivelEscolaridadeController {
     }
 
     private boolean validNivelEscolaridade(NivelEscolaridade nivelEscolaridade) {
-        return nivelEscolaridade.getEscolaridade() != null
-            && nivelEscolaridade.getInstituicao() != null
-            && nivelEscolaridade.getStatus() != null
-            && nivelEscolaridade.getInicio() != null
-            && nivelEscolaridade.getTermino() != null;
+        return nivelEscolaridade.validar();
     }
 
     private boolean validDatasNivelEscolaridade(LocalDate inicio, LocalDate termino) {

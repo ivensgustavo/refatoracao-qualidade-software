@@ -96,4 +96,12 @@ public class CursoCapacitacao {
     public int hashCode() {
         return Objects.hash(id);
     }
+    
+    public boolean validar() {
+    	return this.getCargaHoraria() != null
+                && this.getInstituicao()  != null
+                && this.getNome() != null
+                && this.getInicio() != null
+                && this.getTermino() != null;
+    }
 }
