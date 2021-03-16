@@ -55,4 +55,9 @@ public class AreaCapacitacao {
     	this.setNome(this.getCompetencia().getNome());
         this.setUsuario(usuario);
     }
+    
+    public void modificarAreaCapacitacaoExistenteNoPerfil(AreaCapacitacao areaCapacitacaoSalva) {
+    	this.setId(areaCapacitacaoSalva.getId());
+        this.setNome(areaCapacitacaoSalva.getCompetencia().getNome());
+    }
 }

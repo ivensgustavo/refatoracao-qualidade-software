@@ -47,8 +47,7 @@ public class PerfilControllerImpl {
     }
     
     private void modificarAreaCapacitacaoExistenteNoPerfil(AreaCapacitacao areaCapacitacao, AreaCapacitacao areaCapacitacaoSalva) {
-    	areaCapacitacao.setId(areaCapacitacaoSalva.getId());
-        areaCapacitacao.setNome(areaCapacitacaoSalva.getCompetencia().getNome());
+    	areaCapacitacao.modificarAreaCapacitacaoExistenteNoPerfil(areaCapacitacaoSalva);
         areaCapacitacao = areaCapacitacaoService.update(areaCapacitacao);
     }
     
