@@ -42,8 +42,7 @@ public class PerfilControllerImpl {
     }
     
     private void adicionarNovaAreaCapacitacaoAoPerfil(AreaCapacitacao areaCapacitacao, Usuario usuario) {
-    	areaCapacitacao.setNome(areaCapacitacao.getCompetencia().getNome());
-        areaCapacitacao.setUsuario(usuario);
+    	areaCapacitacao.addNovaAreaCapacitacaoAoperfil(usuario);
         areaCapacitacao = areaCapacitacaoService.create(areaCapacitacao);
     }
     

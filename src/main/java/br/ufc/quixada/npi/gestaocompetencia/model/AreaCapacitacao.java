@@ -50,4 +50,9 @@ public class AreaCapacitacao {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
+    
+    public void addNovaAreaCapacitacaoAoperfil(Usuario usuario) {
+    	this.setNome(this.getCompetencia().getNome());
+        this.setUsuario(usuario);
+    }
 }
