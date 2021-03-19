@@ -258,17 +258,11 @@ public class ComportamentoControllerImpl implements ComportamentoController {
 		Comportamento comportamentoOriginal = null;
 
 		for(Comportamento comportamento : comportamentos) {
-			if(comportamento.isExcluido())
-				throw new GestaoCompetenciaException("Comportamento já encontra excluído");
-
+			
 			comportamentoOriginal = comportamentoService.findById(comportamento.getId())
 					.orElseThrow(() -> new ResourceNotFoundException(COMPORTAMENTO, CODIGO, comportamento.getId()));
-			if(comportamento.getCompetencia().getId() == -1)
-				comportamentoOriginal.setCompetencia(null);
-			else
-				comportamentoOriginal.setCompetencia(comportamento.getCompetencia());
-
-			comportamentoOriginal.setDescricaoAtualizada(comportamento.getDescricaoAtualizada());
+			
+			comportamento.vincular(comportamentoOriginal);
 
 			comportamentosAux.add(comportamentoService.update(comportamentoOriginal)
 									.orElseThrow(() -> new GestaoCompetenciaException(

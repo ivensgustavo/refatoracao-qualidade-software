@@ -205,4 +205,16 @@ public class Comportamento {
 		return comportamentoOriginal;
 		
 	}
+	
+	public void vincular(Comportamento comportamentoOriginal) throws GestaoCompetenciaException{
+		if(this.isExcluido())
+			throw new GestaoCompetenciaException("Comportamento já encontra excluído");
+
+		if(this.getCompetencia().getId() == -1)
+			comportamentoOriginal.setCompetencia(null);
+		else
+			comportamentoOriginal.setCompetencia(this.getCompetencia());
+
+		comportamentoOriginal.setDescricaoAtualizada(this.getDescricaoAtualizada());
+	}
 }
