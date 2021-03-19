@@ -1,5 +1,6 @@
 package br.ufc.quixada.npi.gestaocompetencia.model;
 
+import br.ufc.quixada.npi.gestaocompetencia.exception.GestaoCompetenciaException;
 import br.ufc.quixada.npi.gestaocompetencia.model.enums.StatusExperienciaProfissional;
 import br.ufc.quixada.npi.gestaocompetencia.model.enums.TipoExperienciaProfissional;
 
@@ -111,5 +112,24 @@ public class ExperienciaProfissional {
     			this.getCargo() != null &&
     			this.getInstituicao() != null &&
     			this.getInicio() != null;
+    }
+    
+    public boolean validarDatas() {
+    	return this.inicio.isEqual(termino) || this.inicio.isBefore(termino);
+    }
+    
+    public ExperienciaProfissional processar() {
+    	this.setPerfil(perfil);
+    	
+    	if(StatusExperienciaProfissional.ATUAL.equals(this.getStatus())) {
+    		this.setTermino(null);
+    		return this;
+    	}else {
+    		if(this.validarDatas()) {
+                return this;
+            } else {
+                return null;
+            }
+    	}
     }
 }

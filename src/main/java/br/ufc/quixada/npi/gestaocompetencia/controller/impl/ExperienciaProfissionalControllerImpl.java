@@ -70,7 +70,7 @@ public class ExperienciaProfissionalControllerImpl {
             throw new GestaoCompetenciaException("Sem permissão para excluir a experiência profissional!");
         }
     }
-
+    
     private ResponseEntity<ExperienciaProfissional> getExperienciaProfissionalResponseEntity(
     @AuthenticationPrincipal Usuario usuario, @RequestBody ExperienciaProfissional experienciaProfissional,
     String tipoServico) {
@@ -81,7 +81,16 @@ public class ExperienciaProfissionalControllerImpl {
 
         if(perfil !=  null) {
             if(this.validExperienciaProfissional(experienciaProfissional)) {
-                LocalDate inicio = experienciaProfissional.getInicio();
+            	
+            	ExperienciaProfissional resposta = experienciaProfissional.processar();
+            	if(resposta != null) {
+            		return this.save(resposta, tipoServico);
+            	}else {
+            		 throw new GestaoCompetenciaException("As datas de início e término não são válidas!");
+            	}
+            	
+            }
+                /*LocalDate inicio = experienciaProfissional.getInicio();
                 experienciaProfissional.setPerfil(perfil);
 
                 if(StatusExperienciaProfissional.ATUAL.equals(experienciaProfissional.getStatus())) {
@@ -95,8 +104,8 @@ public class ExperienciaProfissionalControllerImpl {
                     } else {
                         throw new GestaoCompetenciaException("As datas de início e término não são válidas!");
                     }
-                }
-            } else {
+                }*/
+            else {
                 throw new GestaoCompetenciaException(DADOS_INSUFICIENTES);
             }
         } else {
@@ -115,10 +124,6 @@ public class ExperienciaProfissionalControllerImpl {
 
     private boolean validExperienciaProfissional(ExperienciaProfissional experienciaProfissional) {
         return experienciaProfissional.validar();
-    }
-
-    private boolean validDatasExperienciaProfissional(LocalDate inicio, LocalDate termino) {
-        return inicio.isEqual(termino) || inicio.isBefore(termino);
     }
 
     private Perfil findPerfil(Usuario usuario) {

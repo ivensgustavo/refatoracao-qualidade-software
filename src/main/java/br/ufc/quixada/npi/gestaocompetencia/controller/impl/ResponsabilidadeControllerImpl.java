@@ -320,11 +320,20 @@ public class ResponsabilidadeControllerImpl {
 		responsabilidade.atualizarNormalizacao(usuario, responsabilidadeAtualizada);
 	}
 	
+	private void consolidarCompetenciasChefia(List<Competencia> competencias) {
+		for(Competencia comp : competencias) if(!comp.isValidada()) comp.setValidada(true);
+	}
+	
+	private void consolidarCompetenciasConsolidado(List<Competencia> competencias) {
+		for(Competencia comp : competencias) if(!comp.isValidada()) comp.setValidada(true);
+	}
+	
 	private void consolidacaoResponsabilidadeUpdate(Responsabilidade responsabilidade,
 			Responsabilidade responsabilidadeAtualizada, Usuario usuario) {
 		responsabilidade.atualizarConsolidacao(usuario, responsabilidadeAtualizada);
-		for(Competencia comp : responsabilidade.getCompetenciasChefia()) if(!comp.isValidada()) comp.setValidada(true);
-		for(Competencia comp : responsabilidade.getCompetenciasConsolidado()) if(!comp.isValidada())comp.setValidada(true);
+		
+		this.consolidarCompetenciasChefia(responsabilidade.getCompetenciasChefia());
+		this.consolidarCompetenciasConsolidado(responsabilidade.getCompetenciasConsolidado());
 	}
 
 	private void validacaoResponsabilidadeUpdate(Responsabilidade responsabilidade,
