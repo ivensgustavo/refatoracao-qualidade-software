@@ -166,4 +166,19 @@ public class Usuario implements UserDetails, Serializable {
 	public int hashCode() {
 		return Objects.hash(id);
 	}
+	
+	public Map<String, Object> prepararMapServidores(){
+		Map<String, Object> map = new LinkedHashMap<>();
+		
+		map.put("ID", this.getId());
+		map.put("SERVIDOR", this);
+		map.put("UNIDADE", this.getUnidade());
+		if(this.getUnidade().hasPermissionCRUD(this)) {
+			map.put("TIPO", "GESTOR");
+		} else {
+			map.put("TIPO", "SERVIDOR");
+		}
+		
+		return map;
+	}
 }

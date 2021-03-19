@@ -155,27 +155,14 @@ public class UnidadeControllerImpl {
 		}
 
 		for (Usuario servidor : servidores) {
-			Map<String, Object> map = new LinkedHashMap<>();
-			map.put(ID, servidor.getId());
-			map.put(SERVIDOR, servidor);
-			map.put(UNIDADE, servidor.getUnidade());
-			if(servidor.getUnidade().hasPermissionCRUD(servidor)) {
-				map.put(TIPO, GESTOR);
-			} else {
-				map.put(TIPO, SERVIDOR);
-			}
-
+			Map<String, Object> map = servidor.prepararMapServidores();
 			dados.add(map);
 		}
 
 		// GESTORES
 		List<Unidade> subunidades = unidadeService.findByUnidadePai(unidade);
 		for (Unidade subunidade : subunidades) {
-			Map<String, Object> map = new LinkedHashMap<>();
-			map.put(ID, subunidade.getChefe().getId());
-			map.put(SERVIDOR, subunidade.getChefe());
-			map.put(UNIDADE, subunidade);
-			map.put(TIPO, GESTOR);
+			Map<String, Object> map = subunidade.prepararMapUnidades();
 
 			dados.add(map);
 		}

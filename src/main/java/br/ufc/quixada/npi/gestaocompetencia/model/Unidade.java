@@ -9,6 +9,8 @@ import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 
 @Entity
@@ -122,5 +124,15 @@ public class Unidade {
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
+	}
+	
+	public Map<String, Object> prepararMapUnidades() {
+		Map<String, Object> map = new LinkedHashMap<>();
+		map.put("ID", this.getChefe().getId());
+		map.put("SERVIDOR", this.getChefe());
+		map.put("UNIDADE", this);
+		map.put("TIPO", "GESTOR");
+
+		return map;
 	}
 }
