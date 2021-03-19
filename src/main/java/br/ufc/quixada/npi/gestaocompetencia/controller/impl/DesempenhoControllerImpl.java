@@ -56,16 +56,8 @@ public class DesempenhoControllerImpl implements DesempenhoController {
 		List<Avaliacao> resultado;
 		List<Map<String, Object>> avaliacoes = new ArrayList<>();
 
-		if(diagnosticoId != null) {
-			if(diagnosticoService.verifyAccess(diagnosticoId, usuario.getUnidade())
-				|| diagnosticoService.verifySecondaryAccess(diagnosticoId, usuario.getUnidade())
-			) {
-				diagnostico = diagnosticoId;
-			}
-		} else {
-			diagnostico = diagnosticoService.findLast(usuario.getUnidade());
-		}
-
+		diagnostico = diagnosticoService.getDiagnosticoAvaliacao(diagnosticoId, usuario.getUnidade());
+			
 		if(diagnostico != null) {
 			if(recebidas) {
 				resultado = avaliacaoService.findByAvaliado(usuario, diagnostico, tipo, perspectiva);

@@ -87,24 +87,8 @@ public class ExperienciaProfissionalControllerImpl {
             		return this.save(resposta, tipoServico);
             	}else {
             		 throw new GestaoCompetenciaException("As datas de início e término não são válidas!");
-            	}
-            	
+            	}	
             }
-                /*LocalDate inicio = experienciaProfissional.getInicio();
-                experienciaProfissional.setPerfil(perfil);
-
-                if(StatusExperienciaProfissional.ATUAL.equals(experienciaProfissional.getStatus())) {
-                    experienciaProfissional.setTermino(null);
-                    return this.save(experienciaProfissional, tipoServico);
-                } else {
-                    LocalDate termino = experienciaProfissional.getTermino();
-
-                    if(this.validDatasExperienciaProfissional(inicio, termino)) {
-                        return this.save(experienciaProfissional, tipoServico);
-                    } else {
-                        throw new GestaoCompetenciaException("As datas de início e término não são válidas!");
-                    }
-                }*/
             else {
                 throw new GestaoCompetenciaException(DADOS_INSUFICIENTES);
             }

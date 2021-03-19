@@ -31,4 +31,6 @@ public interface DiagnosticoService {
     Boolean validarDatas(Diagnostico diagnostico);
 
     Boolean validarPrazos(Diagnostico diagnostico);
+
+	Diagnostico getDiagnosticoAvaliacao(Diagnostico diagnosticoId, Unidade unidade);
 }

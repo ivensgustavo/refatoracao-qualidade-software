@@ -127,4 +127,17 @@ public class DiagnosticoServiceImpl implements DiagnosticoService {
     public Boolean validarPrazos(Diagnostico diagnostico){
         return diagnostico.validarPrazos();
     }
+    
+    public Diagnostico getDiagnosticoAvaliacao(Diagnostico diagnosticoId, Unidade unidade) {
+    	
+    	if(diagnosticoId != null) {
+			if(this.verifyAccess(diagnosticoId, unidade)
+				|| this.verifySecondaryAccess(diagnosticoId, unidade)
+			) {return diagnosticoId;}
+		else {
+			return this.findLast(unidade);
+		}
+    }
+    	return null;
+    }
 }
