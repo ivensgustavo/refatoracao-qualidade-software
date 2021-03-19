@@ -22,13 +22,10 @@ public class NivelEscolaridadeServiceImpl implements NivelEscolaridadeService {
 		Escolaridade escolaridade = nivelEscolaridade.getEscolaridade();
 
 		if(escolaridade != null) {
-			if (escolaridade.equals(Escolaridade.ENSINO_MEDIO) || escolaridade.equals(Escolaridade.ENSINO_FUNDAMENTAL)) {
+			if (escolaridade.ehPrecisoLimparCurso()) {
 				nivelEscolaridade.setCurso("");
 			}
 
-			if (escolaridade.equals(Escolaridade.ESPECIALIZACAO_RESIDENCIA_MEDICA)) {
-				nivelEscolaridade.setCurso("");
-			}
 		}
 		
 		return nivelEscolaridadeRepository.save(nivelEscolaridade);

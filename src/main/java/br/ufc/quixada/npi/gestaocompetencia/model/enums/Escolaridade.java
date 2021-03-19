@@ -32,5 +32,11 @@ public enum Escolaridade {
     public String getDescricao() {
         return descricao;
     }
+    
+    public boolean ehPrecisoLimparCurso() {
+    	return this.equals(Escolaridade.ENSINO_MEDIO) 
+    			|| this.equals(Escolaridade.ENSINO_FUNDAMENTAL)
+    			|| this.equals(Escolaridade.ESPECIALIZACAO_RESIDENCIA_MEDICA);
+    }
 
 }
