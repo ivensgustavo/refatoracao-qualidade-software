@@ -1,6 +1,5 @@
 package br.ufc.quixada.npi.gestaocompetencia.controller.impl;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import br.ufc.quixada.npi.gestaocompetencia.exception.GestaoCompetenciaException;
@@ -80,11 +79,9 @@ public class NivelEscolaridadeController {
             "Dados insuficientes para realizar a alteração!";
 
         if(perfil !=  null) {
-            if(this.validNivelEscolaridade(nivelEscolaridade)) {
-                LocalDate inicio = nivelEscolaridade.getInicio();
-                LocalDate termino = nivelEscolaridade.getTermino();
+            if(nivelEscolaridade.validar()) {
 
-                if(this.validDatasNivelEscolaridade(inicio, termino)) {
+                if(nivelEscolaridade.validarDatas()) {
                     nivelEscolaridade.setPerfil(perfil);
 
                     if(tipoServico.equals("create")) {
@@ -102,14 +99,6 @@ public class NivelEscolaridadeController {
             throw new GestaoCompetenciaException(PERFIL_NAO_CADASTRADO);
         }
 
-    }
-
-    private boolean validNivelEscolaridade(NivelEscolaridade nivelEscolaridade) {
-        return nivelEscolaridade.validar();
-    }
-
-    private boolean validDatasNivelEscolaridade(LocalDate inicio, LocalDate termino) {
-        return inicio.isEqual(termino) || inicio.isBefore(termino);
     }
 
     private Perfil findPerfil(Usuario usuario) {

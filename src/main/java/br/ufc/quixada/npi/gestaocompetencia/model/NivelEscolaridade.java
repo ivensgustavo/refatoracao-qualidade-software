@@ -110,4 +110,8 @@ public class NivelEscolaridade {
 	            && this.getInicio() != null
 	            && this.getTermino() != null;
 	}
+	
+	public boolean validarDatas() {
+		return this.inicio.isEqual(termino) || this.inicio.isBefore(termino);
+	}
 }
