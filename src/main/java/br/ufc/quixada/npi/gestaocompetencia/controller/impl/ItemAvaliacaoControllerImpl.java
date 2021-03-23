@@ -59,15 +59,24 @@ public class ItemAvaliacaoControllerImpl implements ItemAvaliacaoController {
         return ResponseEntity.ok(avaliacao.getItens());
     }
 
+    
+    private boolean existeUmChefeEAvaliacoesNaoVazio(List<Avaliacao> avaliacoes, Usuario usuario) {
+    	return avaliacoes.isEmpty() && usuario.existeUmChefe();
+    }
+    
+    private boolean existeUmSubChefeEAvaliacoesNaoVazio(List<Avaliacao> avaliacoes, Usuario usuario) {
+    	return avaliacoes.isEmpty() && usuario.existeUmViceChefe();
+    }
+    
     @GetMapping("/diagnostico/{diagnostico}/{tipo}/{perspectiva}")
     public ResponseEntity<List<ItemAvaliacao>> findAllByTipo(Diagnostico diagnostico, @PathVariable("tipo") Avaliacao.TipoAvaliacao tipo,
      @PathVariable Avaliacao.Perspectiva perspectiva, @AuthenticationPrincipal Usuario usuario) {
         List<ItemAvaliacao> itens = new ArrayList<>();
         List<Avaliacao> avaliacoes = avaliacaoService.find(usuario, diagnostico, tipo, perspectiva);
 
-        if(avaliacoes.isEmpty() && usuario.getUnidade().getChefe() != null && usuario.getUnidade().getChefe().equals(usuario)) {
+        if(existeUmChefeEAvaliacoesNaoVazio(avaliacoes, usuario)) {
             avaliacoes = avaliacaoService.find(usuario.getUnidade().getViceChefe(), diagnostico, tipo, perspectiva);
-        } else if(avaliacoes.isEmpty() && usuario.getUnidade().getViceChefe() != null && usuario.getUnidade().getViceChefe().equals(usuario)) {
+        } else if(existeUmSubChefeEAvaliacoesNaoVazio(avaliacoes, usuario)) {
             avaliacoes = avaliacaoService.find(usuario.getUnidade().getChefe(), diagnostico, tipo, perspectiva);
         }
 

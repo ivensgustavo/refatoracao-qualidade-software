@@ -181,4 +181,12 @@ public class Usuario implements UserDetails, Serializable {
 		
 		return map;
 	}
+	
+	public boolean existeUmChefe() {
+		return this.getUnidade().getChefe() != null && this.getUnidade().getChefe().equals(this);
+	}
+	
+	public boolean existeUmViceChefe() {
+		return this.getUnidade().getViceChefe() != null && this.getUnidade().getViceChefe().equals(this);
+	}
 }
