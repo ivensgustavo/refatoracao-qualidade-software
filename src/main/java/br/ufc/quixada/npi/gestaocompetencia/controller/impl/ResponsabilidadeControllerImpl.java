@@ -69,6 +69,24 @@ public class ResponsabilidadeControllerImpl {
 
 		return ResponseEntity.ok(responsabilidadeService.findAll(usuario.getUnidade(), mapeamento));
 	}
+	
+	
+	private List<Responsabilidade> getResponsabilidadesDaAutoAvalicao(List<Avaliacao> avaliacoes) {
+		
+		if (avaliacoes != null && !avaliacoes.isEmpty()) {
+			List<Responsabilidade> responsabilidades = new ArrayList<>();
+			List<ItemAvaliacao> itens = avaliacoes.get(0).getItens();
+			for (ItemAvaliacao item : itens) {
+				if (!item.isNaoAplica()) {
+					responsabilidades.add(item.getResponsabilidade());
+				}
+			}
+			
+			return responsabilidades;
+		}
+		
+		return null;
+	}
 
 	@GetMapping("/diagnostico/{diagnostico}/autoavaliacao")
 	public ResponseEntity<List<Responsabilidade>> findConsolidadasAutoavaliacao(@PathVariable Diagnostico diagnostico, @AuthenticationPrincipal Usuario usuario){
@@ -76,16 +94,12 @@ public class ResponsabilidadeControllerImpl {
 		if(usuario.getUnidade().getChefe() == usuario || usuario.getUnidade().getViceChefe() == usuario) {
 			return ResponseEntity.ok(responsabilidadeService.findConsolidadas(usuario.getUnidade(), diagnostico.getMapeamento()));
 		} else {
-			if (avaliacoes != null && !avaliacoes.isEmpty()) {
-				List<Responsabilidade> responsabilidades = new ArrayList<>();
-				List<ItemAvaliacao> itens = avaliacoes.get(0).getItens();
-				for (ItemAvaliacao item : itens) {
-					if (!item.isNaoAplica()) {
-						responsabilidades.add(item.getResponsabilidade());
-					}
+				List<Responsabilidade> responsabilidades = getResponsabilidadesDaAutoAvalicao(avaliacoes);
+				if(responsabilidades != null) {
+					return ResponseEntity.ok(responsabilidades);
+				}else {
+					return null;
 				}
-				return ResponseEntity.ok(responsabilidades);
-			} else { return null; }
 		}
 	}
 
