@@ -53,10 +53,29 @@ public class PerfilIdiomaControllerImpl {
                 )
         );
     }
+    
+    private boolean existeUmPerfiliIdiomaEOPerfilCorresponde(PerfilIdioma perfilIdioma, Perfil perfil) {
+    	return perfilIdioma != null && perfilIdioma.getPerfil() != null && perfilIdioma.getPerfil().equals(perfil);
+    }
 
+    private ResponseEntity<Void> deletarPerfilIdioma(Perfil perfil, Idioma idioma) {
+    	PerfilIdioma perfilIdioma = perfilIdiomaService.findByPerfilAndIdioma(perfil, idioma);
+
+        if(existeUmPerfiliIdiomaEOPerfilCorresponde(perfilIdioma, perfil)) {
+            try {
+                perfilIdiomaService.delete(perfilIdioma);
+                return ResponseEntity.noContent().build();
+            } catch (ResourceNotFoundException e) {
+                return ResponseEntity.notFound().build();
+            }
+        } else {
+            throw new GestaoCompetenciaException("Você não tem permissão para excluir o idioma!");
+        }
+    }
+    
     @DeleteMapping("")
     public ResponseEntity<Void> delete(@AuthenticationPrincipal Usuario usuario,
-    @RequestParam Idioma idioma) {
+    @RequestParam Idioma idioma) throws GestaoCompetenciaException{
         Perfil perfil = this.findPerfil(usuario);
 
         if(perfil == null) {
@@ -65,18 +84,7 @@ public class PerfilIdiomaControllerImpl {
             if(idioma == null) {
                 throw new GestaoCompetenciaException("Idioma não informado!");
             } else {
-                PerfilIdioma perfilIdioma = perfilIdiomaService.findByPerfilAndIdioma(perfil, idioma);
-
-                if(perfilIdioma != null && perfilIdioma.getPerfil() != null && perfilIdioma.getPerfil().equals(perfil)) {
-                    try {
-                        perfilIdiomaService.delete(perfilIdioma);
-                        return ResponseEntity.noContent().build();
-                    } catch (ResourceNotFoundException e) {
-                        return ResponseEntity.notFound().build();
-                    }
-                } else {
-                    throw new GestaoCompetenciaException("Você não tem permissão para excluir o idioma!");
-                }
+               return deletarPerfilIdioma(perfil, idioma);
             }
         }
     }
