@@ -27,6 +27,35 @@ public class JwtTokenFilter extends GenericFilterBean {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    private void criarAutenticacao(HttpServletRequest req, HttpServletResponse res) {
+    	
+    	String token = jwtTokenProvider.resolveToken((HttpServletRequest) req);
+        if (token != null && jwtTokenProvider.validateToken(token)) {
+            Authentication auth = jwtTokenProvider.getAuthentication(token);
+
+			String refreshToken = jwtTokenProvider.createRefreshToken(token);
+			res.setHeader("Access-Control-Expose-Headers", "Authorization");
+			res.setHeader("Authorization", "Bearer " + refreshToken);
+
+			if (auth != null) {
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            }
+        }
+    }
+    
+    private void emitirErroAoCriarAutenticacao(HttpServletRequest req, HttpServletResponse res, String mensagemDeErro) throws IOException {
+    	StandardError error = new StandardError(HttpStatus.UNAUTHORIZED.value(), "Token inválido ou expirado!", mensagemDeErro, req.getHeader("Referer"));
+		res.setStatus(error.getStatus());
+		res.setContentType("application/json");
+
+		ObjectMapper mapper = new ObjectMapper();
+		PrintWriter out = res.getWriter();
+		String json = mapper.writeValueAsString(error);
+		out.print(json);
+		out.flush();
+    }
+    
+    
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
@@ -35,29 +64,9 @@ public class JwtTokenFilter extends GenericFilterBean {
 		HttpServletResponse res = (HttpServletResponse) response;
 
 		try {
-	        String token = jwtTokenProvider.resolveToken((HttpServletRequest) req);
-	        if (token != null && jwtTokenProvider.validateToken(token)) {
-	            Authentication auth = jwtTokenProvider.getAuthentication(token);
-
-				String refreshToken = jwtTokenProvider.createRefreshToken(token);
-				res.setHeader("Access-Control-Expose-Headers", "Authorization");
-				res.setHeader("Authorization", "Bearer " + refreshToken);
-
-				if (auth != null) {
-	                SecurityContextHolder.getContext().setAuthentication(auth);
-	            }
-	        }
+	        criarAutenticacao(req, res);
     	} catch(InvalidJwtAuthenticationException ex) {
-			StandardError error = new StandardError(HttpStatus.UNAUTHORIZED.value(), "Token inválido ou expirado!", ex.getMessage(), req.getHeader("Referer"));
-			res.setStatus(error.getStatus());
-			res.setContentType("application/json");
-
-			ObjectMapper mapper = new ObjectMapper();
-			PrintWriter out = res.getWriter();
-			String json = mapper.writeValueAsString(error);
-			out.print(json);
-			out.flush();
-
+    		emitirErroAoCriarAutenticacao(req, res, ex.getMessage());
 			return;
 
 		}
