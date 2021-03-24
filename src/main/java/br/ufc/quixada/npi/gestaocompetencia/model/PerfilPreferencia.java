@@ -22,6 +22,17 @@ public class PerfilPreferencia {
     @JoinColumn(name = "item_preferencia_id")
     private ItemPreferencia itemPreferencia;
 
+    public PerfilPreferencia() {
+    	
+    }
+    
+    public PerfilPreferencia(Perfil perfil, Preferencia preferencia) {
+    	this.perfilPreferenciaKey = new PerfilPreferenciaKey(perfil.getId(), preferencia.getId());
+    	this.perfil = perfil;
+    	this.preferencia =preferencia;
+    	this.itemPreferencia = null;
+    }
+    
     public PerfilPreferenciaKey getPerfilPreferenciaKey() {
         return perfilPreferenciaKey;
     }

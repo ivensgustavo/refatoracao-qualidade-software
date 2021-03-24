@@ -13,6 +13,15 @@ public class PerfilPreferenciaKey implements Serializable {
     @Column(name = "preferencia_id")
     private Integer preferenciaId;
 
+    public PerfilPreferenciaKey() {
+    	
+    }
+    
+    public PerfilPreferenciaKey(Integer perfilId, Integer preferenciaId) {
+    	this.perfilId = perfilId;
+    	this.preferenciaId = preferenciaId;
+    }
+    
     public Integer getPerfilId() {
         return perfilId;
     }

@@ -41,17 +41,7 @@ public class PerfilPreferenciaControllerImpl {
 
             if(!preferencias.isEmpty()) {
                 for(Preferencia preferencia : preferencias) {
-                    PerfilPreferencia perfilPreferencia = new PerfilPreferencia();
-
-                    PerfilPreferenciaKey perfilPreferenciaKey = new PerfilPreferenciaKey();
-                    perfilPreferenciaKey.setPerfilId(perfil.getId());
-                    perfilPreferenciaKey.setPreferenciaId(preferencia.getId());
-
-                    perfilPreferencia.setPerfilPreferenciaKey(perfilPreferenciaKey);
-                    perfilPreferencia.setPerfil(perfil);
-                    perfilPreferencia.setPreferencia(preferencia);
-                    perfilPreferencia.setItemPreferencia(null);
-
+                    PerfilPreferencia perfilPreferencia = new PerfilPreferencia(perfil, preferencia);
                     perfilPreferencias.add(perfilPreferenciaService.create(perfilPreferencia));
                 }
             }
