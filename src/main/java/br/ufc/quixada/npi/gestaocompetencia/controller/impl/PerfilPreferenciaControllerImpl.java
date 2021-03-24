@@ -49,35 +49,43 @@ public class PerfilPreferenciaControllerImpl {
 
         return ResponseEntity.ok(perfilPreferencias);
     }
+    
+    private ItemPreferencia getItemPreferencia(PerfilPreferencia perfilPreferencia, Preferencia preferencia) {
+    	 ItemPreferencia itemPreferencia = perfilPreferencia.getItemPreferencia();
+    	 if(itemPreferencia != null && validItemPreferencia(preferencia, itemPreferencia)) {
+    		 return itemPreferencia;
+    	 }
+    	 
+    	 return null;
+    }
+    
+    private ResponseEntity<PerfilPreferencia> setPerfilPreferencia(PerfilPreferencia perfilPreferencia, Perfil perfil) {
+    	Preferencia preferencia = perfilPreferencia.getPreferencia();
+
+        if(preferencia == null) {
+            throw new GestaoCompetenciaException("Preferência necessária para o cadastro!");
+        } else {
+            ItemPreferencia itemPreferencia = this.getItemPreferencia(perfilPreferencia, preferencia);
+
+            if(itemPreferencia != null) {
+                perfilPreferencia.setPerfil(perfil);
+                return ResponseEntity.ok(perfilPreferenciaService.update(perfilPreferencia));
+            } else {
+                throw new GestaoCompetenciaException("O item selecionado não corresponde a preferência");
+            }
+        }
+    }
 
     @PutMapping("")
     public ResponseEntity<PerfilPreferencia> update(@AuthenticationPrincipal Usuario usuario,
-    @RequestBody PerfilPreferencia perfilPreferencia) {
+    @RequestBody PerfilPreferencia perfilPreferencia) throws GestaoCompetenciaException{
         if(perfilPreferencia != null) {
             Perfil perfil = this.findPerfil(usuario);
 
             if(perfil == null) {
                 throw new GestaoCompetenciaException("Perfil não cadastrado!");
             } else {
-                Preferencia preferencia = perfilPreferencia.getPreferencia();
-
-                if(preferencia == null) {
-                    throw new GestaoCompetenciaException("Preferência necessária para o cadastro!");
-                } else {
-                    ItemPreferencia itemPreferencia = perfilPreferencia.getItemPreferencia();
-
-                    if(itemPreferencia != null && validItemPreferencia(preferencia, itemPreferencia)) {
-                        PerfilPreferenciaKey perfilPreferenciaKey = new PerfilPreferenciaKey();
-                        perfilPreferenciaKey.setPerfilId(perfil.getId());
-                        perfilPreferenciaKey.setPreferenciaId(preferencia.getId());
-                        perfilPreferencia.setPerfilPreferenciaKey(perfilPreferenciaKey);
-
-                        perfilPreferencia.setPerfil(perfil);
-                        return ResponseEntity.ok(perfilPreferenciaService.update(perfilPreferencia));
-                    } else {
-                        throw new GestaoCompetenciaException("O item selecionado não corresponde a preferência");
-                    }
-                }
+                return setPerfilPreferencia(perfilPreferencia, perfil);
             }
         } else {
             throw new GestaoCompetenciaException("Preferência necessária para o cadastro!");

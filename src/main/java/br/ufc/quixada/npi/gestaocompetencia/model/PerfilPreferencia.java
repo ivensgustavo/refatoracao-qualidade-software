@@ -46,7 +46,11 @@ public class PerfilPreferencia {
     }
 
     public void setPerfil(Perfil perfil) {
-        this.perfil = perfil;
+    	 PerfilPreferenciaKey perfilPreferenciaKey = new PerfilPreferenciaKey();
+         perfilPreferenciaKey.setPerfilId(perfil.getId());
+         perfilPreferenciaKey.setPreferenciaId(preferencia.getId());
+         this.setPerfilPreferenciaKey(perfilPreferenciaKey);
+         this.perfil = perfil;
     }
 
     public Preferencia getPreferencia() {
