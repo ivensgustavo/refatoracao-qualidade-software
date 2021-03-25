@@ -1,5 +1,7 @@
 package br.ufc.quixada.npi.gestaocompetencia.service.impl;
 
+import br.ufc.quixada.npi.gestaocompetencia.exception.GestaoCompetenciaException;
+import br.ufc.quixada.npi.gestaocompetencia.model.Avaliacao;
 import br.ufc.quixada.npi.gestaocompetencia.model.ItemAvaliacao;
 import br.ufc.quixada.npi.gestaocompetencia.repository.ItemAvaliacaoRepository;
 import br.ufc.quixada.npi.gestaocompetencia.service.ItemAvaliacaoService;
@@ -55,5 +57,16 @@ public class ItemAvaliacaoServiceImpl implements ItemAvaliacaoService {
     @Transactional
     public ItemAvaliacao save(ItemAvaliacao itemAvaliacao) {
         return itemAvaliacaoRepository.save(itemAvaliacao);
+    }
+    
+    public ItemAvaliacao avaliar(ItemAvaliacao item, Avaliacao avaliacao) {
+    	if (Avaliacao.Perspectiva.COMPORTAMENTAL.equals(item.getAvaliacao().getPerspectiva()) && this.findByFator(item) != null) {
+			throw new GestaoCompetenciaException("Item já avaliado");
+		}
+		if (Avaliacao.Perspectiva.RESPONSABILIDADE.equals(item.getAvaliacao().getPerspectiva()) && this.findByResponsabilidade(item) != null) {
+			throw new GestaoCompetenciaException("Item já avaliado");
+		}
+		item.setAvaliacao(avaliacao);
+		return this.save(item);
     }
 }

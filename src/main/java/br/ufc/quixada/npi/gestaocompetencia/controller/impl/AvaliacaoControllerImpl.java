@@ -29,9 +29,6 @@ public class AvaliacaoControllerImpl{
 
 	@Autowired
 	private AvaliacaoService avaliacaoService;
-
-	@Autowired
-	private DiagnosticoService diagnosticoService;
 	
 	@Autowired
 	private AvaliacaoComportamentalService comportamentalService;
@@ -157,18 +154,7 @@ public class AvaliacaoControllerImpl{
 
 	@PostMapping("/avaliar")
 	public ResponseEntity<List<ItemAvaliacao>> avaliar(@RequestBody List<ItemAvaliacao> avaliacoes) {
-		List<ItemAvaliacao> itens = new ArrayList<>();
-		for(ItemAvaliacao item : avaliacoes) {
-			if (Avaliacao.Perspectiva.COMPORTAMENTAL.equals(item.getAvaliacao().getPerspectiva()) && itemAvaliacaoService.findByFator(item) != null) {
-				throw new GestaoCompetenciaException(ITEM_AVALIADO);
-			}
-			if (Avaliacao.Perspectiva.RESPONSABILIDADE.equals(item.getAvaliacao().getPerspectiva()) && itemAvaliacaoService.findByResponsabilidade(item) != null) {
-				throw new GestaoCompetenciaException(ITEM_AVALIADO);
-			}
-			item.setAvaliacao(avaliacaoService.findById(item.getAvaliacao().getId()));
-			itens.add(itemAvaliacaoService.save(item));
-		}
-		return ResponseEntity.ok().build();
+		return avaliacaoService.avaliar(avaliacoes);
 	}
 	
 

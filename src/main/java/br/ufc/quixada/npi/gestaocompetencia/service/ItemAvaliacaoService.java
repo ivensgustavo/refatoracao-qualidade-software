@@ -1,5 +1,6 @@
 package br.ufc.quixada.npi.gestaocompetencia.service;
 
+import br.ufc.quixada.npi.gestaocompetencia.model.Avaliacao;
 import br.ufc.quixada.npi.gestaocompetencia.model.ItemAvaliacao;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -20,4 +21,6 @@ public interface ItemAvaliacaoService {
     void delete(ItemAvaliacao itemAvaliacao);
 
     ItemAvaliacao save(ItemAvaliacao itemAvaliacao);
+
+	ItemAvaliacao avaliar(ItemAvaliacao item, Avaliacao avaliacao);
 }

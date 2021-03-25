@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import br.ufc.quixada.npi.gestaocompetencia.exception.GestaoCompetenciaException;
 import br.ufc.quixada.npi.gestaocompetencia.exception.NotAllowedException;
 import br.ufc.quixada.npi.gestaocompetencia.model.Diagnostico;
+import br.ufc.quixada.npi.gestaocompetencia.model.ItemAvaliacao;
 import br.ufc.quixada.npi.gestaocompetencia.repository.UnidadeRepository;
 import br.ufc.quixada.npi.gestaocompetencia.repository.UsuarioRepository;
 import br.ufc.quixada.npi.gestaocompetencia.service.DiagnosticoService;
+import br.ufc.quixada.npi.gestaocompetencia.service.ItemAvaliacaoService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -29,6 +33,9 @@ public class AvaliacaoService {
 
 	@Autowired
     private DiagnosticoService diagnosticoService;
+	
+	@Autowired
+	private ItemAvaliacaoService itemAvaliacaoService;
 
 	@Autowired
 	private UnidadeRepository unidadeRepository;
@@ -86,6 +93,15 @@ public class AvaliacaoService {
 
 		return retorno;
 		
+	}
+	
+	public ResponseEntity<List<ItemAvaliacao>> avaliar(List<ItemAvaliacao> avaliacoes) throws GestaoCompetenciaException{
+		List<ItemAvaliacao> itens = new ArrayList<>();
+		for(ItemAvaliacao item : avaliacoes) {
+			Avaliacao avaliacao = this.findById(item.getAvaliacao().getId());
+			itens.add(itemAvaliacaoService.avaliar(item, avaliacao));
+		}
+		return ResponseEntity.ok().build();
 	}
 
 	public List<Avaliacao> findByAvaliado(Usuario usuario, Diagnostico diagnostico, TipoAvaliacao tipo, Avaliacao.Perspectiva perspectiva){
