@@ -60,34 +60,35 @@ public class AvaliacaoControllerImpl{
 		return ResponseEntity.ok(itens);
 	}
 	
+	/*
+	private Avaliacao getAvaliacaoSimples(List<Avaliacao> avaliacoes, TipoAvaliacao tipo, Usuario usuario, Diagnostico diagnostico, Avaliacao.Perspectiva perspectiva) {
+		if (hasNoAvaliacoes(avaliacoes)) {
+			return avaliacaoService.createSimple(tipo, usuario, diagnostico, perspectiva);
+		} else {
+			return avaliacoes.get(0);
+		}
+	}
+	
+	private List<Avaliacao> getAvaliacaoComplexa(List<Avaliacao> avaliacoes, TipoAvaliacao tipo, Usuario usuario, Diagnostico diagnostico, Avaliacao.Perspectiva perspectiva) {
+		if (hasNoAvaliacoes(avaliacoes)) {
+			return avaliacaoService.createComplex(tipo, usuario, diagnostico, perspectiva);
+		} else {
+			return avaliacoes;
+		}
+	}
+	
+	private List<Avaliacao> getAvaliacaoComplexaSecondaryAcess(List<Avaliacao> avaliacoes, TipoAvaliacao tipo, Usuario usuario, Diagnostico diagnostico, Avaliacao.Perspectiva perspectiva){
+		if (hasNoAvaliacoes(avaliacoes) && TipoAvaliacao.SUBORDINADO.equals(tipo)) {
+				return avaliacaoService.createComplexSecondaryAccess(tipo, usuario, diagnostico, perspectiva);
+		} else {
+			return avaliacoes;
+		}
+	}*/
+	
 	@GetMapping({"/diagnostico/{diagnostico}"})
 	public ResponseEntity<List<Avaliacao>> find(@AuthenticationPrincipal Usuario usuario, @PathVariable Diagnostico diagnostico, @RequestParam(value="tipo") TipoAvaliacao tipo, @RequestParam Avaliacao.Perspectiva perspectiva) {
-		List<Avaliacao> avaliacoes = avaliacaoService.find(usuario, diagnostico, tipo, perspectiva);
-		List<Avaliacao> retorno = new ArrayList<>();
-
-		if(diagnosticoService.verifyAccess(diagnostico, usuario.getUnidade())) {
-			if (TipoAvaliacao.AUTOAVALIACAO.equals(tipo) || TipoAvaliacao.CHEFIA.equals(tipo)) {
-				if (hasNoAvaliacoes(avaliacoes)) {
-					retorno.add(avaliacaoService.createSimple(tipo, usuario, diagnostico, perspectiva));
-				} else {
-					retorno.add(avaliacoes.get(0));
-				}
-			} else if (TipoAvaliacao.SUBORDINADO.equals(tipo) || TipoAvaliacao.PARES.equals(tipo)) {
-				if (hasNoAvaliacoes(avaliacoes)) {
-					retorno.addAll(avaliacaoService.createComplex(tipo, usuario, diagnostico, perspectiva));
-				} else {
-					retorno.addAll(avaliacoes);
-				}
-			}
-		} else if(diagnosticoService.verifySecondaryAccess(diagnostico, usuario.getUnidade())) {
-			if (hasNoAvaliacoes(avaliacoes)) {
-				if (TipoAvaliacao.SUBORDINADO.equals(tipo)) {
-					retorno.addAll(avaliacaoService.createComplexSecondaryAccess(tipo, usuario, diagnostico, perspectiva));
-				}
-			} else {
-				retorno.addAll(avaliacoes);
-			}
-		}
+		
+		List<Avaliacao> retorno = avaliacaoService.findComplete(usuario, diagnostico, tipo, perspectiva);
 
 		return ResponseEntity.ok(retorno);
 	}

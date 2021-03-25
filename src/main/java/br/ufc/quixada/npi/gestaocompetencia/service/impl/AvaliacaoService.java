@@ -10,6 +10,7 @@ import br.ufc.quixada.npi.gestaocompetencia.repository.UnidadeRepository;
 import br.ufc.quixada.npi.gestaocompetencia.repository.UsuarioRepository;
 import br.ufc.quixada.npi.gestaocompetencia.service.DiagnosticoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import br.ufc.quixada.npi.gestaocompetencia.model.Avaliacao;
@@ -39,6 +40,52 @@ public class AvaliacaoService {
 
 	public List<Avaliacao> find(Usuario usuario, Diagnostico diagnostico, TipoAvaliacao tipo, Avaliacao.Perspectiva perspectiva){
 		return avaliacaoRepository.findAvaliacao(usuario, diagnostico, tipo, perspectiva);
+	}
+	
+	private boolean hasNoAvaliacoes(List<Avaliacao> lista) {
+		return lista == null || lista.isEmpty();
+	}
+	
+	private Avaliacao getAvaliacaoSimples(List<Avaliacao> avaliacoes, TipoAvaliacao tipo, Usuario usuario, Diagnostico diagnostico, Avaliacao.Perspectiva perspectiva) {
+		if (hasNoAvaliacoes(avaliacoes)) {
+			return this.createSimple(tipo, usuario, diagnostico, perspectiva);
+		} else {
+			return avaliacoes.get(0);
+		}
+	}
+	
+	private List<Avaliacao> getAvaliacaoComplexa(List<Avaliacao> avaliacoes, TipoAvaliacao tipo, Usuario usuario, Diagnostico diagnostico, Avaliacao.Perspectiva perspectiva) {
+		if (hasNoAvaliacoes(avaliacoes)) {
+			return this.createComplex(tipo, usuario, diagnostico, perspectiva);
+		} else {
+			return avaliacoes;
+		}
+	}
+	
+	private List<Avaliacao> getAvaliacaoComplexaSecondaryAcess(List<Avaliacao> avaliacoes, TipoAvaliacao tipo, Usuario usuario, Diagnostico diagnostico, Avaliacao.Perspectiva perspectiva){
+		if (hasNoAvaliacoes(avaliacoes) && TipoAvaliacao.SUBORDINADO.equals(tipo)) {
+				return this.createComplexSecondaryAccess(tipo, usuario, diagnostico, perspectiva);
+		} else {
+			return avaliacoes;
+		}
+	}
+	
+	public List<Avaliacao> findComplete(Usuario usuario, Diagnostico diagnostico, TipoAvaliacao tipo, Avaliacao.Perspectiva perspectiva){
+		List<Avaliacao> avaliacoes = this.find(usuario, diagnostico, tipo, perspectiva);
+		List<Avaliacao> retorno = new ArrayList<>();
+
+		if(diagnosticoService.verifyAccess(diagnostico, usuario.getUnidade())) {
+			if (TipoAvaliacao.AUTOAVALIACAO.equals(tipo) || TipoAvaliacao.CHEFIA.equals(tipo)) {
+				retorno.add(this.getAvaliacaoSimples(avaliacoes, tipo, usuario, diagnostico, perspectiva));
+			} else if (TipoAvaliacao.SUBORDINADO.equals(tipo) || TipoAvaliacao.PARES.equals(tipo)) {
+				retorno.addAll(this.getAvaliacaoComplexa(avaliacoes, tipo, usuario, diagnostico, perspectiva));
+			}
+		} else if(diagnosticoService.verifySecondaryAccess(diagnostico, usuario.getUnidade())) {
+			retorno.addAll(this.getAvaliacaoComplexaSecondaryAcess(avaliacoes, tipo, usuario, diagnostico, perspectiva));
+		}
+
+		return retorno;
+		
 	}
 
 	public List<Avaliacao> findByAvaliado(Usuario usuario, Diagnostico diagnostico, TipoAvaliacao tipo, Avaliacao.Perspectiva perspectiva){
