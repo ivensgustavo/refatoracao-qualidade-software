@@ -109,10 +109,7 @@ public class PerfilIdiomaControllerImpl {
                         );
 
                 if(perfilIdiomaSalvo == null) {
-                    PerfilIdiomaKey perfilIdiomaKey = new PerfilIdiomaKey();
-                    perfilIdiomaKey.setPerfilId(perfil.getId());
-                    perfilIdiomaKey.setIdiomaId(idioma.getId());
-
+                    PerfilIdiomaKey perfilIdiomaKey = new PerfilIdiomaKey(perfil.getId(), idioma.getId());
                     perfilIdioma.setPerfilIdiomaKey(perfilIdiomaKey);
                 }
 

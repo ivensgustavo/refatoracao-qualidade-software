@@ -12,6 +12,15 @@ public class PerfilIdiomaKey implements Serializable {
 
     @Column(name = "idioma_id")
     private Integer idiomaId;
+    
+    public PerfilIdiomaKey() {
+    	
+    }
+    
+    public PerfilIdiomaKey(Integer perfilId, Integer idiomaId) {
+    	this.perfilId = perfilId;
+    	this.idiomaId = idiomaId;
+    }
 
     public Integer getPerfilId() {
         return perfilId;
