@@ -1,11 +1,16 @@
 package br.ufc.quixada.npi.gestaocompetencia.model;
 
+
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import br.ufc.quixada.npi.gestaocompetencia.model.Avaliacao.Perspectiva;
+import br.ufc.quixada.npi.gestaocompetencia.service.ResponsabilidadeService;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 public class Avaliacao {
@@ -158,5 +163,37 @@ public class Avaliacao {
     
     public boolean isAvaliador(Usuario usuario) {
     	return this.getAvaliador().getId().equals(usuario.getId());
+    }
+    
+    private List<Responsabilidade> pegarResponsabilidades(ResponsabilidadeService service, Usuario servidor){
+    	List<Responsabilidade> responsabilidades = new ArrayList<>();
+		
+		if(servidor.verificarSeEhChefe()) {
+			responsabilidades = service.findConsolidadas(servidor.getUnidade(), this.getDiagnostico().getMapeamento());
+		} else {
+			for(ItemAvaliacao item : this.getItens()) {
+				responsabilidades.add(item.getResponsabilidade());
+			}
+		}
+		
+		return responsabilidades;
+    }
+    
+    public Map<String, Object> gerarMap(ResponsabilidadeService service, Usuario servidor, Perspectiva perspectiva) {
+    	Map<String, Object> dados = new LinkedHashMap<>();
+		dados.put("ID", this.getId());
+		dados.put("AVALIACAO", this);
+		dados.put("ITENS", this.getItens());
+		
+		this.getItens().removeIf(ItemAvaliacao::isNaoAplica);
+
+		if (!this.getItens().isEmpty()) {
+
+			if (Perspectiva.RESPONSABILIDADE.equals(perspectiva)) {
+				dados.put("RESPONSABILIDADES", this.pegarResponsabilidades(service, servidor));
+			}
+		}
+		
+		return dados;
     }
 }

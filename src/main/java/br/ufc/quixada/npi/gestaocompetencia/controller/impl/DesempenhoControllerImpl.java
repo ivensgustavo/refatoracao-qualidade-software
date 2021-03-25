@@ -20,6 +20,7 @@ import br.ufc.quixada.npi.gestaocompetencia.model.Avaliacao;
 import br.ufc.quixada.npi.gestaocompetencia.model.Avaliacao.Perspectiva;
 import br.ufc.quixada.npi.gestaocompetencia.model.Diagnostico;
 import br.ufc.quixada.npi.gestaocompetencia.model.ItemAvaliacao;
+import br.ufc.quixada.npi.gestaocompetencia.model.Mapeamento;
 import br.ufc.quixada.npi.gestaocompetencia.model.Responsabilidade;
 import br.ufc.quixada.npi.gestaocompetencia.model.Unidade;
 import br.ufc.quixada.npi.gestaocompetencia.model.Usuario;
@@ -125,32 +126,11 @@ public class DesempenhoControllerImpl implements DesempenhoController {
 
 		return null;
 	}
-
+	
 	public List<Map<String, Object>> setDados(List<Avaliacao> resultado, Usuario servidor, Perspectiva perspectiva, List<Map<String, Object>> avaliacoes) {
 		for(Avaliacao avaliacao : resultado) {
-			avaliacao.getItens().removeIf(ItemAvaliacao::isNaoAplica);
-
-			if (!avaliacao.getItens().isEmpty()) {
-				Map<String, Object> dados = new LinkedHashMap<>();
-				dados.put("ID", avaliacao.getId());
-				dados.put("AVALIACAO", avaliacao);
-				dados.put("ITENS", avaliacao.getItens());
-
-				if (Perspectiva.RESPONSABILIDADE.equals(perspectiva)) {
-					List<Responsabilidade> responsabilidades = new ArrayList<>();
-					if(servidor.getUnidade().getChefe().equals(servidor)) {
-						responsabilidades = responsabilidadeService.findConsolidadas(servidor.getUnidade(), avaliacao.getDiagnostico().getMapeamento());
-					} else {
-						for(ItemAvaliacao item : avaliacao.getItens()) {
-							responsabilidades.add(item.getResponsabilidade());
-						}
-					}
-
-					dados.put("RESPONSABILIDADES", responsabilidades);
-				}
-
+				Map<String, Object> dados = avaliacao.gerarMap(responsabilidadeService, servidor, perspectiva);
 				avaliacoes.add(dados);
-			}
 		}
 
 		return avaliacoes;

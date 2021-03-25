@@ -189,4 +189,8 @@ public class Usuario implements UserDetails, Serializable {
 	public boolean existeUmViceChefe() {
 		return this.getUnidade().getViceChefe() != null && this.getUnidade().getViceChefe().equals(this);
 	}
+	
+	public boolean verificarSeEhChefe() {
+		return this.getUnidade().getChefe().equals(this);
+	}
 }
