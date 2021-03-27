@@ -18,12 +18,16 @@ public class PerfilControllerImpl {
     @Autowired
     private AreaCapacitacaoService areaCapacitacaoService;
 
+    private Perfil findByUsuario(Usuario usuario) {
+    	return perfilService.findByUsuario(usuario);
+    }
+    
     @GetMapping("")
     public ResponseEntity<Perfil> getOrCreate(@AuthenticationPrincipal Usuario usuario) {
-        Perfil perfil = perfilService.findByUsuario(usuario);
+        Perfil perfil = this.findByUsuario(usuario);
         if(perfil == null) {
             this.create(usuario);
-            return ResponseEntity.ok(perfilService.findByUsuario(usuario));
+            return ResponseEntity.ok(this.findByUsuario(usuario));
         } else {
             return ResponseEntity.ok(perfil);
         }
@@ -67,7 +71,7 @@ public class PerfilControllerImpl {
 
     @PutMapping("")
     public ResponseEntity<Perfil> update(@AuthenticationPrincipal Usuario usuario, @RequestBody Perfil perfil) {
-        Perfil perfilSalvo = perfilService.findByUsuario(usuario);
+        Perfil perfilSalvo = this.findByUsuario(usuario);
         boolean perfilValido = verificarPerfilValido(perfil, perfilSalvo);
         
         if(perfilValido) {
