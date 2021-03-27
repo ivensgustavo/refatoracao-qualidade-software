@@ -25,11 +25,15 @@ public class DiagnosticoControllerImpl implements DiagnosticoController {
     @Autowired
     private ComissaoService comissaoService;
 
+    private boolean isMembroComissao(Usuario usuario) {
+    	return comissaoService.isMembroComissao(usuario);
+    }
+    
     @Override
     @GetMapping({"", "/"})
     public ResponseEntity<List<Diagnostico>> findAll(@AuthenticationPrincipal Usuario usuario) {
         List<Diagnostico> diagnosticos;
-        if(comissaoService.isMembroComissao(usuario)) {
+        if(this.isMembroComissao(usuario)) {
             diagnosticos = diagnosticoService.findAll();
         } else {
             throw new NotAllowedException("Sem permissão para visualizar os diagnósticos devido o usuário não fazer parte da comissão");
@@ -81,7 +85,7 @@ public class DiagnosticoControllerImpl implements DiagnosticoController {
     @Override
     @PostMapping("")
     public ResponseEntity<Diagnostico> create(@RequestBody Diagnostico diagnostico, @AuthenticationPrincipal Usuario usuario) {
-        if(!comissaoService.isMembroComissao(usuario)) {
+        if(!this.isMembroComissao(usuario)) {
             throw new NotAllowedException("Sem permissão para cadastrar o diagnóstico");
         } else {
             return ResponseEntity.ok(diagnosticoService.create(diagnostico));
@@ -91,7 +95,7 @@ public class DiagnosticoControllerImpl implements DiagnosticoController {
     @Override
     @PutMapping("")
 	public ResponseEntity<Diagnostico> update(@RequestBody Diagnostico diagnostico, @AuthenticationPrincipal Usuario usuario){
-        if(!comissaoService.isMembroComissao(usuario)) {
+        if(!this.isMembroComissao(usuario)) {
             throw new NotAllowedException("Sem permissão para alterar o diagnóstico");
         } else {
             return ResponseEntity.ok(diagnosticoService.update(diagnostico));
@@ -105,7 +109,7 @@ public class DiagnosticoControllerImpl implements DiagnosticoController {
             throw new ResourceNotFoundException("Diagnóstico", "Código", null);
         }
 
-        if(!comissaoService.isMembroComissao(usuario)) {
+        if(!this.isMembroComissao(usuario)) {
             throw new NotAllowedException("Sem permissão para excluir este diagnóstico");
         }
 

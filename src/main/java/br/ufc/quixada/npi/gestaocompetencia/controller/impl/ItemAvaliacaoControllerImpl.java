@@ -23,7 +23,7 @@ public class ItemAvaliacaoControllerImpl implements ItemAvaliacaoController {
     @Autowired
     private AvaliacaoService avaliacaoService;
 
-    private boolean existeUmViceChefe(Usuario usuraio) {
+    private boolean existeUmViceChefe(Usuario usuario) {
     	return usuario.existeUmViceChefe();
     }
     

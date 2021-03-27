@@ -96,6 +96,10 @@ public class ComportamentoControllerImpl implements ComportamentoController {
 		return ResponseEntity.created(location).body(comportamentoSaved);
 	}
 	
+	private boolean isMembroComissao(Usuario usuario) {
+		return comissaoService.isMembroComissao(usuario);
+	}
+	
 	@Override
 	@GetMapping("/{comportamento}")
 	public ResponseEntity<Comportamento> findById(@PathVariable Comportamento comportamento,
@@ -105,7 +109,7 @@ public class ComportamentoControllerImpl implements ComportamentoController {
 			throw new ResourceNotFoundException(COMPORTAMENTO,
 					CODIGO, request.getRequestURI().toString().replace(PATH_COMPORTAMENTO, ""));
 		
-		if(!comissaoService.isMembroComissao(usuario) && !comportamento.getServidor().equals(usuario))
+		if(!this.isMembroComissao(usuario) && !comportamento.getServidor().equals(usuario))
 			throw new NotAllowedException("Comportamento pertecente a outro usuário");
 		
 		return ResponseEntity.ok(comportamento);
@@ -161,7 +165,7 @@ public class ComportamentoControllerImpl implements ComportamentoController {
 		if(comportamentoOriginal.isExcluido())
 			throw new GestaoCompetenciaException("Comportamento já se encontra excluído");
 		
-		if(!comissaoService.isMembroComissao(usuario) && !comportamentoOriginal.getServidor().equals(usuario))
+		if(!this.isMembroComissao(usuario) && !comportamentoOriginal.getServidor().equals(usuario))
 			throw new NotAllowedException("Sem permissão para editar o comportamento desejado");
 	
 		if(etapa == Etapa.CADASTRO_COMPORTAMENTOS) {
@@ -191,10 +195,10 @@ public class ComportamentoControllerImpl implements ComportamentoController {
 			throw new GestaoCompetenciaException("Não é possível remover um comportamento fora do prazo estipulado para cadastros de comportamentos");
 		}
 		
-		if(!comissaoService.isMembroComissao(usuario) && !comportamento.getServidor().equals(usuario))
+		if(!this.isMembroComissao(usuario) && !comportamento.getServidor().equals(usuario))
 			throw new NotAllowedException("Sem permissão para remover o comportamento desejado");
 
-		if(comissaoService.isMembroComissao(usuario) && !comportamento.getServidor().equals(usuario)) {
+		if(this.isMembroComissao(usuario) && !comportamento.getServidor().equals(usuario)) {
 			comportamentoService.deleteByComissao(comportamento)
 					.orElseThrow(() -> new GestaoCompetenciaException("Erro ao tentar remover o comportamento desejado"));
 		}
@@ -227,7 +231,7 @@ public class ComportamentoControllerImpl implements ComportamentoController {
 	@PutMapping("/normalizacao/consolidar")
 	public ResponseEntity<List<Comportamento>> consolidarComportamentos(@RequestBody List<Comportamento> comportamentos, @AuthenticationPrincipal Usuario usuario){
 		
-		if(!comissaoService.isMembroComissao(usuario))
+		if(!this.isMembroComissao(usuario))
 			throw new NotAllowedException(PERMISSAO_NORMALIZACAO);
 		
 		List<Comportamento> comportamentosAux = new ArrayList<>();
@@ -251,7 +255,7 @@ public class ComportamentoControllerImpl implements ComportamentoController {
 	@PutMapping("/normalizacao/vincular")
 	public ResponseEntity<List<Comportamento>> vincularComportamentos(@RequestBody List<Comportamento> comportamentos, @AuthenticationPrincipal Usuario usuario){
 
-		if(!comissaoService.isMembroComissao(usuario))
+		if(!this.isMembroComissao(usuario))
 			throw new NotAllowedException(PERMISSAO_NORMALIZACAO);
 
 		List<Comportamento> comportamentosAux = new ArrayList<>();
@@ -279,7 +283,7 @@ public class ComportamentoControllerImpl implements ComportamentoController {
 			throw new ResourceNotFoundException(COMPORTAMENTO,
 					CODIGO, request.getRequestURI().toString().replace("/comportamentos/normalizacao/restaurar", ""));
 		
-		if(!comissaoService.isMembroComissao(usuario))
+		if(!this.isMembroComissao(usuario))
 			throw new NotAllowedException("Sem permissão para restaurar esse comportamento");
 		
 		comportamento.setExcluido(false);
@@ -300,7 +304,7 @@ public class ComportamentoControllerImpl implements ComportamentoController {
 			throw new ResourceNotFoundException(COMPORTAMENTO,
 					CODIGO, request.getRequestURI().toString().replace("/comportamentos/normalizacao/restaurar", ""));
 		
-		if(!comissaoService.isMembroComissao(usuario))
+		if(!this.isMembroComissao(usuario))
 			throw new NotAllowedException("Sem permissão para restaurar esse comportamento");
 		
 		if(!comportamento.getMapeamento().isPeriodoNormalizacaoComportamentos())
@@ -319,7 +323,7 @@ public class ComportamentoControllerImpl implements ComportamentoController {
 	@PutMapping("/normalizacao/excluir/{comportamento}")
 	public ResponseEntity<Comportamento> excluirComportamentos(@PathVariable Comportamento comportamento, @AuthenticationPrincipal Usuario usuario){
 		
-		if(!comissaoService.isMembroComissao(usuario))
+		if(!this.isMembroComissao(usuario))
 			throw new NotAllowedException(PERMISSAO_NORMALIZACAO);
 			
 			comportamento.setExcluido(true);

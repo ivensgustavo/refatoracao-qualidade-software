@@ -181,6 +181,9 @@ public class ResponsabilidadeControllerImpl {
 		}
 	}
 
+	private boolean isMembroComissao(Usuario usuario) {
+		return comissaoService.isMembroComissao(usuario);
+	}
 	@GetMapping("/normalizacao/{mapeamento}")
 	public ResponseEntity<Collection<Responsabilidade>> getResponsabilidadeNormalizacao(
 			@PathVariable Mapeamento mapeamento,
@@ -188,7 +191,7 @@ public class ResponsabilidadeControllerImpl {
 			@RequestParam(required=false) SituacaoResponsabilidade situacao,
 			@AuthenticationPrincipal Usuario usuario, HttpServletRequest request){
 
-		if(!comissaoService.isMembroComissao(usuario) && !usuarioService.isChefia(usuario) && !usuarioService.isViceChefia(usuario))
+		if(!this.isMembroComissao(usuario) && !usuarioService.isChefia(usuario) && !usuarioService.isViceChefia(usuario))
 				throw new NotAllowedException(PERMISSAO_MODIFICAR);
 		
 		if(unidades == null) {
@@ -224,7 +227,7 @@ public class ResponsabilidadeControllerImpl {
 			mapeamento.isPeriodoGestorEdicaoResponsabilidades();
 
 		boolean normalizacao = etapa.equals(Etapa.NORMALIZACAO_RESPONSABILIDADES) &&
-			comissaoService.isMembroComissao(usuario) &&
+			this.isMembroComissao(usuario) &&
 			mapeamento.isPeriodoEdicaoComissaoResponsabilidades();
 
 		boolean validacao = etapa.equals(Etapa.VALIDACAO_RESPONSABILIDADES) &&
@@ -236,7 +239,7 @@ public class ResponsabilidadeControllerImpl {
 			mapeamento.isPeriodoEdicaoChefiaResponsabilidades();
 
 		boolean consolidacao = etapa.equals(Etapa.CONSOLIDACAO_RESPONSABILIDADES) &&
-			comissaoService.isMembroComissao(usuario) &&
+			this.isMembroComissao(usuario) &&
 			mapeamento.isPeriodoEdicaoConsolidacaoResponsabilidades();
 
 		responsabilidade.setEditada(true);
