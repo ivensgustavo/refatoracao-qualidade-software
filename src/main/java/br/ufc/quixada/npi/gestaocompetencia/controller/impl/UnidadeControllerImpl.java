@@ -53,7 +53,7 @@ public class UnidadeControllerImpl {
 	public ResponseEntity<List<Unidade>> findAllByGestor(@RequestParam(required = false) Mapeamento mapeamento, @AuthenticationPrincipal Usuario usuario) {
 		List<Unidade> resultado = new ArrayList<>();
 		UnidadeMapeada unidadeMapeada;
-		List<Unidade> subunidades = unidadeService.findByUnidadePai(usuario.getUnidade());
+		List<Unidade> subunidades = this.findByUnidadePai(usuario.getUnidade());
 
 		if(mapeamento == null) {
 			unidadeMapeada = unidadeMapeadaService.findByMapeamento(mapeamentoService.findLastMapeamento(usuario));
@@ -160,7 +160,7 @@ public class UnidadeControllerImpl {
 		}
 
 		// GESTORES
-		List<Unidade> subunidades = unidadeService.findByUnidadePai(unidade);
+		List<Unidade> subunidades = this.findByUnidadePai(unidade);
 		for (Unidade subunidade : subunidades) {
 			Map<String, Object> map = subunidade.prepararMapUnidades();
 
@@ -182,7 +182,7 @@ public class UnidadeControllerImpl {
 
 	public List<Unidade> getUnidadeAndSubunidades(Unidade unidade) {
 		List<Unidade> unidades = new ArrayList<>();
-		List<Unidade> unidadesAux = unidadeService.findByUnidadePai(unidade);
+		List<Unidade> unidadesAux = this.findByUnidadePai(unidade);
 
 		unidades.add(unidade);
 		if(unidadesAux != null && !unidadesAux.isEmpty()) {
@@ -192,5 +192,9 @@ public class UnidadeControllerImpl {
 		}
 
 		return unidades;
+	}
+	
+	public List<Unidade> findByUnidadePai(Unidade unidade){
+		return unidadeService.findByUnidadePai(unidade);
 	}
 }

@@ -77,11 +77,15 @@ public class MapeamentoServiceImpl implements MapeamentoService {
         return mapeamentoRepository.findAllByUnidade(unidade);
     }
 
+    public List<Unidade> findByUnidadePai(Unidade unidade){
+    	return unidadeService.findByUnidadePai(unidade);
+    }
+    
     @Override
     public List<Mapeamento> findAllSecondary(Unidade unidade) {
         List<Mapeamento> mapeamentosUnidade = mapeamentoRepository.findAllByUnidade(unidade);
         List<Mapeamento> mapeamentosSecondary = new ArrayList<>();
-        List<Unidade> subunidades = unidadeService.findByUnidadePai(unidade);
+        List<Unidade> subunidades = this.findByUnidadePai(unidade);
 
         for (Unidade subunidade : subunidades) {
             List<Mapeamento> mapeamentosSubunidade = mapeamentoRepository.findAllByUnidade(subunidade);
@@ -118,7 +122,7 @@ public class MapeamentoServiceImpl implements MapeamentoService {
     @Override
     public Boolean verifySecondaryAccess(Mapeamento mapeamento, Unidade unidade) {
         List<Unidade> unidades = getUnidadesByMapeamento(mapeamento);
-        List<Unidade> subunidades = unidadeService.findByUnidadePai(unidade);
+        List<Unidade> subunidades = this.findByUnidadePai(unidade);
 
         for (Unidade subunidade : subunidades) {
             if(unidades.contains(subunidade)) {

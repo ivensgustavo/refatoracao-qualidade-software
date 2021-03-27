@@ -46,11 +46,15 @@ public class DiagnosticoServiceImpl implements DiagnosticoService {
         return diagnosticoRepository.findAllByUnidade(usuario.getUnidade());
     }
 
+    public List<Unidade> findByUnidadePai(Unidade unidade){
+    	return unidadeService.findByUnidadePai(unidade);
+    }
+    
     @Override
     public List<Diagnostico> findAllSecondary(Unidade unidade) {
         List<Diagnostico> diagnosticosUnidade = diagnosticoRepository.findAllByUnidade(unidade);
         List<Diagnostico> diagnosticosSecondary = new ArrayList<>();
-        List<Unidade> subunidades = unidadeService.findByUnidadePai(unidade);
+        List<Unidade> subunidades = this.findByUnidadePai(unidade);
 
         for (Unidade subunidade : subunidades) {
             List<Diagnostico> diagnosticosSubunidade = diagnosticoRepository.findAllByUnidade(subunidade);
@@ -75,7 +79,7 @@ public class DiagnosticoServiceImpl implements DiagnosticoService {
     @Override
     public Boolean verifySecondaryAccess(Diagnostico diagnostico, Unidade unidade) {
         List<Unidade> unidades = mapeamentoService.getUnidadesByMapeamento(diagnostico.getMapeamento());
-        List<Unidade> subunidades = unidadeService.findByUnidadePai(unidade);
+        List<Unidade> subunidades = this.findByUnidadePai(unidade);
 
         for (Unidade subunidade : subunidades) {
             if(unidades.contains(subunidade)) {
