@@ -57,6 +57,11 @@ public class ResponsabilidadeControllerImpl {
 	private static final String RESPONSABILIDADE = "Responsabilidade";
 	private static final String PERMISSAO_MODIFICAR = "Sem permissão para ver ou modificar este mapeamento";
 	
+	
+	private boolean hasPermissionCRUD(Usuario usuario) {
+		return usuario.getUnidade().hasPermissionCRUD(usuario);
+	}
+	
 	@GetMapping("/{mapeamento}")
 	public ResponseEntity<Collection<Responsabilidade>> findAllByUsuario(@PathVariable("mapeamento")Mapeamento mapeamento, @AuthenticationPrincipal Usuario usuario,
 			HttpServletRequest request){
@@ -64,7 +69,7 @@ public class ResponsabilidadeControllerImpl {
 		if(mapeamento == null)
 			throw new ResourceNotFoundException(MAPEAMENTO, CODIGO, request.getRequestURI().toString().replace(PATH_RESPONSABILIDADE, ""));
 
-		if(!usuario.getUnidade().hasPermissionCRUD(usuario))
+		if(!this.hasPermissionCRUD(usuario))
 			throw new NotAllowedException(PERMISSAO_MODIFICAR);
 
 		return ResponseEntity.ok(responsabilidadeService.findAll(usuario.getUnidade(), mapeamento));
@@ -121,7 +126,7 @@ public class ResponsabilidadeControllerImpl {
 		if(mapeamento == null )
 			throw new ResourceNotFoundException(MAPEAMENTO, CODIGO, request.getRequestURI().toString().replace(PATH_RESPONSABILIDADE, ""));
 
-		if(!usuario.getUnidade().hasPermissionCRUD(usuario))
+		if(!this.hasPermissionCRUD(usuario))
 			throw new NotAllowedException(PERMISSAO_MODIFICAR);
 		
 		if(!mapeamento.isPeriodoGestorEdicaoResponsabilidades())
@@ -166,7 +171,7 @@ public class ResponsabilidadeControllerImpl {
 		if(responsabilidade != null && responsabilidade.getMapeamento() != null && !responsabilidade.getMapeamento().equals(mapeamento))
 			throw new NotAllowedException("Esta responsabilidade não pertence a este mapeamento");
 
-		if(!usuario.getUnidade().hasPermissionCRUD(usuario))
+		if(!this.hasPermissionCRUD(usuario))
 			throw new NotAllowedException(PERMISSAO_MODIFICAR);
 
 		if(!mapeamento.isPeriodoGestorEdicaoResponsabilidades())
@@ -222,7 +227,7 @@ public class ResponsabilidadeControllerImpl {
 	@RequestParam Mapeamento mapeamento, @RequestParam Etapa etapa, @RequestBody Responsabilidade responsabilidadeAtualizada,
 	@AuthenticationPrincipal Usuario usuario, HttpServletRequest request){
 		boolean cadastro = etapa.equals(Etapa.CADASTRO_RESPONSABILIDADES) &&
-			usuario.getUnidade().hasPermissionCRUD(usuario) &&
+			this.hasPermissionCRUD(usuario) &&
 			mapeamentoService.verifyAccess(mapeamento, usuario.getUnidade()) &&
 			mapeamento.isPeriodoGestorEdicaoResponsabilidades();
 
@@ -295,7 +300,7 @@ public class ResponsabilidadeControllerImpl {
 
 	@PutMapping("/normalizacao/desvalidar/{responsabilidade}")
 	public ResponseEntity<Responsabilidade> desvalidarResponsabilidade(@AuthenticationPrincipal Usuario usuario, @PathVariable("responsabilidade") Responsabilidade responsabilidade){
-		if(!usuario.getUnidade().hasPermissionCRUD(usuario))
+		if(!this.hasPermissionCRUD(usuario))
 			throw new GestaoCompetenciaException("Você não tem permissão para modificar esta responsabilidade");
 
 		responsabilidade.desvalidar();
