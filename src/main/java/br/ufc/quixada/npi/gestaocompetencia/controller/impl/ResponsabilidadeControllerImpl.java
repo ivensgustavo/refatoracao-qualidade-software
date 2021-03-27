@@ -91,7 +91,7 @@ public class ResponsabilidadeControllerImpl {
 	@GetMapping("/diagnostico/{diagnostico}/autoavaliacao")
 	public ResponseEntity<List<Responsabilidade>> findConsolidadasAutoavaliacao(@PathVariable Diagnostico diagnostico, @AuthenticationPrincipal Usuario usuario){
 		List<Avaliacao> avaliacoes = avaliacaoRepository.findAvaliacaoByAvaliado(usuario, diagnostico, Avaliacao.TipoAvaliacao.SUBORDINADO, Avaliacao.Perspectiva.RESPONSABILIDADE);
-		if(usuario.getUnidade().getChefe() == usuario || usuario.getUnidade().getViceChefe() == usuario) {
+		if(usuario.getUnidade().getChefe() == usuario || usuario.getViceChefe() == usuario) {
 			return ResponseEntity.ok(responsabilidadeService.findConsolidadas(usuario.getUnidade(), diagnostico.getMapeamento()));
 		} else {
 				List<Responsabilidade> responsabilidades = getResponsabilidadesDaAutoAvalicao(avaliacoes);

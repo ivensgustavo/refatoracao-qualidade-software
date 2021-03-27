@@ -98,8 +98,8 @@ public class AvaliacaoControllerImpl{
         @RequestParam(value="perspectiva") Avaliacao.Perspectiva perspectiva) {
 		List<Avaliacao> retorno = new ArrayList<>();
 
-	    if((usuario.getUnidade().getChefe() != null && usuario.getUnidade().getChefe().equals(usuario)) ||
-		(usuario.getUnidade().getViceChefe() != null && usuario.getUnidade().getViceChefe().equals(usuario))) {
+	    if(usuario.existeUmChefe() ||
+		usuario.existeUmViceChefe()) {
             retorno.addAll(avaliacaoService.findAvaliacoesJustificadasUnidade(diagnostico, usuario.getUnidade(), tipo, perspectiva));
         } else {
             retorno.addAll(avaliacaoService.findAvaliacoesJustificadasUsuario(diagnostico, usuario, tipo, perspectiva));

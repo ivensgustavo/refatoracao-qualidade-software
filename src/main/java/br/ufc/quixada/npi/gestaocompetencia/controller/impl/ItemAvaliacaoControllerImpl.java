@@ -23,6 +23,10 @@ public class ItemAvaliacaoControllerImpl implements ItemAvaliacaoController {
     @Autowired
     private AvaliacaoService avaliacaoService;
 
+    private boolean existeUmViceChefe(Usuario usuraio) {
+    	return usuario.existeUmViceChefe();
+    }
+    
     @Override
     @GetMapping({"", "/"})
     public ResponseEntity<List<ItemAvaliacao>> filterItemAvaliacao(
@@ -36,8 +40,8 @@ public class ItemAvaliacaoControllerImpl implements ItemAvaliacaoController {
 
         // Ajustes para que tanto o chefe como o vice-chefe possam filtrar os itens de avaliação
         if(avaliador.getUnidade().getChefe() != null && avaliador.getUnidade().getChefe().equals(avaliador)) {
-            itemAvaliacaoSearch = new ItemAvaliacaoSearch(avaliacoes, responsabilidades, comportamentos, notas, avaliador, avaliador.getUnidade().getViceChefe());
-        } else if(avaliador.getUnidade().getViceChefe() != null && avaliador.getUnidade().getViceChefe().equals(avaliador)) {
+            itemAvaliacaoSearch = new ItemAvaliacaoSearch(avaliacoes, responsabilidades, comportamentos, notas, avaliador, avaliador.getViceChefe());
+        } else if(this.existeUmViceChefe(avaliador)) {
             itemAvaliacaoSearch = new ItemAvaliacaoSearch(avaliacoes, responsabilidades, comportamentos, notas, avaliador, avaliador.getUnidade().getChefe());
         } else {
             itemAvaliacaoSearch = new ItemAvaliacaoSearch(avaliacoes, responsabilidades, comportamentos, notas, avaliador, avaliador);
@@ -65,7 +69,7 @@ public class ItemAvaliacaoControllerImpl implements ItemAvaliacaoController {
     }
     
     private boolean existeUmSubChefeEAvaliacoesNaoVazio(List<Avaliacao> avaliacoes, Usuario usuario) {
-    	return avaliacoes.isEmpty() && usuario.existeUmViceChefe();
+    	return avaliacoes.isEmpty() && existeUmViceChefe(usuario);
     }
     
     @GetMapping("/diagnostico/{diagnostico}/{tipo}/{perspectiva}")
@@ -75,7 +79,7 @@ public class ItemAvaliacaoControllerImpl implements ItemAvaliacaoController {
         List<Avaliacao> avaliacoes = avaliacaoService.find(usuario, diagnostico, tipo, perspectiva);
 
         if(existeUmChefeEAvaliacoesNaoVazio(avaliacoes, usuario)) {
-            avaliacoes = avaliacaoService.find(usuario.getUnidade().getViceChefe(), diagnostico, tipo, perspectiva);
+            avaliacoes = avaliacaoService.find(usuario.getViceChefe(), diagnostico, tipo, perspectiva);
         } else if(existeUmSubChefeEAvaliacoesNaoVazio(avaliacoes, usuario)) {
             avaliacoes = avaliacaoService.find(usuario.getUnidade().getChefe(), diagnostico, tipo, perspectiva);
         }

@@ -150,7 +150,7 @@ public class UnidadeControllerImpl {
 		servidores = usuarioService.findByUnidade(unidade);
 		servidores.remove(usuario);
 
-		if(unidade.getViceChefe() != null && unidade.getViceChefe().equals(usuario)) {
+		if(usuario.existeUmViceChefe()) {
 			servidores.remove(unidade.getChefe());
 		}
 

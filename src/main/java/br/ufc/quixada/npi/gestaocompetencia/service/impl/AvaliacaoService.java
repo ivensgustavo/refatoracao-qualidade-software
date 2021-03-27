@@ -157,11 +157,11 @@ public class AvaliacaoService {
 	private List<Avaliacao> obterResultadoAvaliacao(TipoAvaliacao tipo, Usuario avaliador, Diagnostico diagnostico, Avaliacao.Perspectiva perspectiva){
 		List<Avaliacao> resultado = new ArrayList<>();
         if(avaliador.getUnidade().getChefe().equals(avaliador)) {
-            resultado = avaliacaoRepository.findAvaliacaoByAvaliador(avaliador.getUnidade().getViceChefe(), diagnostico, tipo, perspectiva);
-            resultado.addAll(avaliacaoRepository.findIgnoradas(avaliador.getUnidade().getViceChefe(), diagnostico, tipo, perspectiva));
+            resultado = avaliacaoRepository.findAvaliacaoByAvaliador(avaliador.getViceChefe(), diagnostico, tipo, perspectiva);
+            resultado.addAll(avaliacaoRepository.findIgnoradas(avaliador.getViceChefe(), diagnostico, tipo, perspectiva));
         }
 
-        if(avaliador.getUnidade().getViceChefe() != null && avaliador.getUnidade().getViceChefe().equals(avaliador)) {
+        if(this.existeUmViceChefe(avaliador)) {
             resultado = avaliacaoRepository.findAvaliacaoByAvaliador(avaliador.getUnidade().getChefe(), diagnostico, tipo, perspectiva);
             resultado.addAll(avaliacaoRepository.findIgnoradas(avaliador.getUnidade().getChefe(), diagnostico, tipo, perspectiva));
         }
@@ -177,7 +177,7 @@ public class AvaliacaoService {
 		
         servidores.remove(avaliador);
 
-        if(avaliador.getUnidade().getViceChefe() != null && avaliador.getUnidade().getViceChefe().equals(avaliador)){
+        if(this.existeUmViceChefe(avaliador)){
             servidores.remove(avaliador.getUnidade().getChefe());
         }
 
@@ -250,7 +250,7 @@ public class AvaliacaoService {
 		
 		servidores.remove(avaliador);
         servidores.remove(avaliador.getUnidade().getChefe());
-        servidores.remove(avaliador.getUnidade().getViceChefe());
+        servidores.remove(avaliador.getViceChefe());
         int limiteAleatorio = servidores.size();
         int numIgnoradas = 0;
 
@@ -314,11 +314,11 @@ public class AvaliacaoService {
         }
 
         if(avaliador.getUnidade().getChefe().equals(avaliador)) {
-            resultado = avaliacaoRepository.findAvaliacaoByAvaliador(avaliador.getUnidade().getViceChefe(), diagnostico, tipo, perspectiva);
-            resultado.addAll(avaliacaoRepository.findIgnoradas(avaliador.getUnidade().getViceChefe(), diagnostico, tipo, perspectiva));
+            resultado = avaliacaoRepository.findAvaliacaoByAvaliador(avaliador.getViceChefe(), diagnostico, tipo, perspectiva);
+            resultado.addAll(avaliacaoRepository.findIgnoradas(avaliador.getViceChefe(), diagnostico, tipo, perspectiva));
         }
 
-        if(avaliador.getUnidade().getViceChefe() != null && avaliador.getUnidade().getViceChefe().equals(avaliador)) {
+        if(this.existeUmViceChefe(avaliador)) {
             resultado = avaliacaoRepository.findAvaliacaoByAvaliador(avaliador.getUnidade().getChefe(), diagnostico, tipo, perspectiva);
             resultado.addAll(avaliacaoRepository.findIgnoradas(avaliador.getUnidade().getChefe(), diagnostico, tipo, perspectiva));
         }
@@ -351,6 +351,10 @@ public class AvaliacaoService {
         return avaliacoes;
     }
 
+    private boolean existeUmViceChefe(Usuario usuario) {
+    	return usuario.existeUmViceChefe();
+    }
+    
 	public Avaliacao justificar(Usuario avaliador, Avaliacao avaliacao, String justificativa) {
 		List<Usuario> servidores = usuarioRepository.findByUnidade(avaliador.getUnidade());
 		List<Usuario> servidoresAvaliados = new ArrayList<>();
